@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>BYTE BAZAAR — Annual Tech Fest Invitation</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,800&family=Space+Mono:wght@400;700&family=Instrument+Serif:ital@1&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+tailwind.config = {
+  theme: {
+    extend: {
+      colors: { paper: '#F3EAD7', ink: '#1B1A17', tomato: '#E8452C', mustard: '#F2B632', forest: '#1F4D3A' },
+      fontFamily: {
+        display: ['"Bricolage Grotesque"', 'Impact', 'sans-serif'],
+        mono: ['"Space Mono"', 'ui-monospace', 'monospace'],
+        serif: ['"Instrument Serif"', 'Georgia', 'serif']
+      },
+      boxShadow: { hard: '6px 6px 0 0 #1B1A17', hardsm: '4px 4px 0 0 #1B1A17' },
+      keyframes: {
+        marquee: { '0%': { transform: 'translateX(0)' }, '100%': { transform: 'translateX(-50%)' } },
+        wobble: { '0%,100%': { transform: 'rotate(-8deg)' }, '50%': { transform: 'rotate(4deg)' } }
+      },
+      animation: { marquee: 'marquee 25s linear infinite', wobble: 'wobble 4s ease-in-out infinite' }
+    }
+  }
+}
+</script>
+</head>
+<body class="bg-paper text-ink font-mono antialiased overflow-x-hidden pt-[env(safe-area-inset-top)] pb-[env(safe-area-inset-bottom)]">
+
+<!-- ticker -->
+<div class="bg-ink text-mustard overflow-hidden border-b-4 border-ink">
+  <div class="flex w-max animate-marquee whitespace-nowrap py-2 font-bold uppercase tracking-widest text-sm">
+    <span class="px-6">★ Hackathon ★ Robo Wars ★ Capture The Flag ★ Code Golf ★ Gaming Arena ★ Free Entry ★ Faculty Welcome ★ Hackathon ★ Robo Wars ★ Capture The Flag ★ Code Golf ★ Gaming Arena ★ Free Entry ★ Faculty Welcome</span>
+    <span class="px-6">★ Hackathon ★ Robo Wars ★ Capture The Flag ★ Code Golf ★ Gaming Arena ★ Free Entry ★ Faculty Welcome ★ Hackathon ★ Robo Wars ★ Capture The Flag ★ Code Golf ★ Gaming Arena ★ Free Entry ★ Faculty Welcome</span>
+  </div>
+</div>
+
+<!-- nav -->
+<header class="mx-auto flex max-w-6xl flex-col items-center justify-between gap-3 px-5 py-5 sm:flex-row">
+  <p class="font-display text-xl font-extrabold tracking-tight">SB Jain Institute of Technology, Management & Research<span class="text-tomato">/</span>Dept. of CSE(DS)</p>
+  <nav class="flex gap-5 text-sm font-bold uppercase">
+    <a href="#stalls" class="underline decoration-4 decoration-mustard underline-offset-4 hover:decoration-tomato focus:outline-none focus-visible:bg-mustard">Stalls</a>
+    <a href="#day" class="underline decoration-4 decoration-mustard underline-offset-4 hover:decoration-tomato focus:outline-none focus-visible:bg-mustard">Schedule</a>
+    <a href="#rsvp" class="underline decoration-4 decoration-mustard underline-offset-4 hover:decoration-tomato focus:outline-none focus-visible:bg-mustard">RSVP</a>
+  </nav>
+</header>
+
+<!-- hero -->
+<section class="relative mx-auto max-w-6xl px-5 pb-16 pt-8 sm:pt-14">
+  <p class="mb-2 inline-block -rotate-2 border-2 border-ink bg-mustard px-3 py-1 text-xs font-bold uppercase tracking-widest shadow-hardsm">You are cordially invited · Annual Tech Fest</p>
+  <h1 class="font-display text-[22vw] font-extrabold uppercase leading-[0.8] tracking-tighter sm:text-[10.5rem]">
+    Byte<br><span class="ml-[8vw] text-tomato sm:ml-24">Bazaar</span>
+  </h1>
+  <p class="mt-6 max-w-xl font-serif text-3xl italic leading-snug sm:text-4xl">
+    A marketplace where ideas are traded, bugs are haggled over, and the best code goes home with the crown.
+  </p>
+
+  <div class="mt-10 flex flex-wrap items-center gap-4">
+    <a href="#rsvp" class="border-4 border-ink bg-tomato px-8 py-4 text-lg font-extrabold uppercase text-paper shadow-hard transition duration-200 hover:-translate-x-1 hover:-translate-y-1 hover:bg-mustard hover:text-ink hover:shadow-[10px_10px_0_0_#1B1A17] focus:outline-none focus-visible:ring-4 focus-visible:ring-forest active:translate-x-1 active:translate-y-1 active:shadow-none">Grab your pass →</a>
+    <a href="#stalls" class="border-4 border-ink bg-paper px-8 py-4 text-lg font-extrabold uppercase shadow-hard transition duration-200 hover:bg-forest hover:text-paper focus:outline-none focus-visible:ring-4 focus-visible:ring-tomato">Browse stalls</a>
+  </div>
+
+  <!-- sticker -->
+  <div class="absolute right-4 top-4 hidden h-36 w-36 animate-wobble items-center justify-center rounded-full border-4 border-ink bg-forest text-center font-display text-lg font-extrabold uppercase leading-tight text-mustard shadow-hard sm:flex lg:right-10 lg:top-20 lg:h-44 lg:w-44 lg:text-xl">
+    Entry<br>₹0<br>always
+  </div>
+</section>
+
+<!-- ticket -->
+<section class="mx-auto max-w-6xl px-5 pb-16">
+  <div class="flex flex-col border-4 border-ink bg-mustard shadow-hard md:flex-row">
+    <div class="flex-1 border-b-4 border-dashed border-ink p-6 md:border-b-0 md:border-r-4">
+      <p class="text-xs font-bold uppercase tracking-widest">Admit one · Students &amp; Faculty</p>
+      <p class="mt-2 font-display text-4xl font-extrabold uppercase leading-none sm:text-5xl">DD · MMM · YYYY</p>
+      <p class="mt-3 font-bold">Main Auditorium &amp; Lab Block — SB Jain Institute of Technology, Management & Research</p>
+    </div>
+    <div class="flex items-center justify-around gap-6 p-6 text-center md:w-72">
+      <div><p class="font-display text-5xl font-extrabold">09</p><p class="text-xs font-bold uppercase">Events</p></div>
+      <div><p class="font-display text-5xl font-extrabold">24</p><p class="text-xs font-bold uppercase">Hours</p></div>
+      <div><p class="font-display text-5xl font-extrabold">1</p><p class="text-xs font-bold uppercase">Crown</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- stalls -->
+<section id="stalls" class="border-y-4 border-ink bg-forest py-16 text-paper">
+  <div class="mx-auto max-w-6xl px-5">
+    <h2 class="font-display text-5xl font-extrabold uppercase tracking-tight sm:text-7xl">Pick a <span class="font-serif font-normal normal-case italic text-mustard">stall</span></h2>
+    <div class="mt-10 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+
+      <article class="group -rotate-1 border-4 border-ink bg-paper p-6 text-ink shadow-hard transition duration-300 hover:rotate-0 hover:-translate-y-2 hover:bg-mustard">
+        <p class="text-xs font-bold uppercase text-tomato group-hover:text-ink">Stall 01 · Team of 3</p>
+        <h3 class="mt-1 font-display text-3xl font-extrabold uppercase">Hack-a-thon</h3>
+        <p class="mt-3 text-sm">Build something real in 24 hours. Pizza, chaos, and a very honest demo round.</p>
+        <p class="mt-4 inline-block border-2 border-ink px-2 text-xs font-bold uppercase">Python · Web · ML</p>
+      </article>
+
+      <article class="group rotate-1 border-4 border-ink bg-paper p-6 text-ink shadow-hard transition duration-300 hover:rotate-0 hover:-translate-y-2 hover:bg-mustard">
+        <p class="text-xs font-bold uppercase text-tomato group-hover:text-ink">Stall 02 · Solo</p>
+        <h3 class="mt-1 font-display text-3xl font-extrabold uppercase">Code Golf</h3>
+        <p class="mt-3 text-sm">Solve it in the fewest characters. Elegance is optional, brevity is the religion.</p>
+        <p class="mt-4 inline-block border-2 border-ink px-2 text-xs font-bold uppercase">45 minutes</p>
+      </article>
+
+      <article class="group -rotate-1 border-4 border-ink bg-paper p-6 text-ink shadow-hard transition duration-300 hover:rotate-0 hover:-translate-y-2 hover:bg-mustard">
+        <p class="text-xs font-bold uppercase text-tomato group-hover:text-ink">Stall 03 · Team of 2</p>
+        <h3 class="mt-1 font-display text-3xl font-extrabold uppercase">Capture The Flag</h3>
+        <p class="mt-3 text-sm">Crack puzzles, decode clues, and break (our) toy systems ethically.</p>
+        <p class="mt-4 inline-block border-2 border-ink px-2 text-xs font-bold uppercase">Security</p>
+      </article>
+
+      <article class="group rotate-1 border-4 border-ink bg-paper p-6 text-ink shadow-hard transition duration-300 hover:rotate-0 hover:-translate-y-2 hover:bg-mustard">
+        <p class="text-xs font-bold uppercase text-tomato group-hover:text-ink">Stall 04 · Team of 4</p>
+        <h3 class="mt-1 font-display text-3xl font-extrabold uppercase">Robo Wars</h3>
+        <p class="mt-3 text-sm">Bring a bot, leave with bragging rights (or a few spare parts).</p>
+        <p class="mt-4 inline-block border-2 border-ink px-2 text-xs font-bold uppercase">Hardware</p>
+      </article>
+
+      <article class="group -rotate-1 border-4 border-ink bg-paper p-6 text-ink shadow-hard transition duration-300 hover:rotate-0 hover:-translate-y-2 hover:bg-mustard">
+        <p class="text-xs font-bold uppercase text-tomato group-hover:text-ink">Stall 05 · Open</p>
+        <h3 class="mt-1 font-display text-3xl font-extrabold uppercase">Poster Pitch</h3>
+        <p class="mt-3 text-sm">Two minutes, one poster, one idea. Faculty judges. No slides allowed.</p>
+        <p class="mt-4 inline-block border-2 border-ink px-2 text-xs font-bold uppercase">Research</p>
+      </article>
+
+      <article class="group rotate-1 border-4 border-ink bg-paper p-6 text-ink shadow-hard transition duration-300 hover:rotate-0 hover:-translate-y-2 hover:bg-mustard">
+        <p class="text-xs font-bold uppercase text-tomato group-hover:text-ink">Stall 06 · Everyone</p>
+        <h3 class="mt-1 font-display text-3xl font-extrabold uppercase">Gaming Arena</h3>
+        <p class="mt-3 text-sm">Brackets, bragging, and a leaderboard that will start friendships and end them.</p>
+        <p class="mt-4 inline-block border-2 border-ink px-2 text-xs font-bold uppercase">Esports</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- schedule -->
+<section id="day" class="mx-auto max-w-6xl px-5 py-16">
+  <h2 class="font-display text-5xl font-extrabold uppercase tracking-tight sm:text-7xl">The <span class="font-serif font-normal normal-case italic text-tomato">day</span>, in order</h2>
+  <ol class="mt-10 border-l-8 border-ink">
+    <li class="relative flex flex-col gap-1 py-5 pl-8 sm:flex-row sm:gap-8">
+      <span class="absolute -left-[18px] top-7 h-7 w-7 border-4 border-ink bg-tomato"></span>
+      <span class="w-32 font-display text-3xl font-extrabold">09:00</span>
+      <span class="font-bold">Gates open · registration desk · chai</span>
+    </li>
+    <li class="relative flex flex-col gap-1 py-5 pl-8 sm:flex-row sm:gap-8">
+      <span class="absolute -left-[18px] top-7 h-7 w-7 border-4 border-ink bg-mustard"></span>
+      <span class="w-32 font-display text-3xl font-extrabold">10:00</span>
+      <span class="font-bold">Inauguration by the Principal &amp; Head of Department</span>
+    </li>
+    <li class="relative flex flex-col gap-1 py-5 pl-8 sm:flex-row sm:gap-8">
+      <span class="absolute -left-[18px] top-7 h-7 w-7 border-4 border-ink bg-forest"></span>
+      <span class="w-32 font-display text-3xl font-extrabold">11:00</span>
+      <span class="font-bold">Stalls open · Hackathon kicks off · Code Golf round 1</span>
+    </li>
+    <li class="relative flex flex-col gap-1 py-5 pl-8 sm:flex-row sm:gap-8">
+      <span class="absolute -left-[18px] top-7 h-7 w-7 border-4 border-ink bg-tomato"></span>
+      <span class="w-32 font-display text-3xl font-extrabold">16:30</span>
+      <span class="font-bold">Robo Wars finals · Gaming Arena semis</span>
+    </li>
+    <li class="relative flex flex-col gap-1 py-5 pl-8 sm:flex-row sm:gap-8">
+      <span class="absolute -left-[18px] top-7 h-7 w-7 border-4 border-ink bg-mustard"></span>
+      <span class="w-32 font-display text-3xl font-extrabold">18:00</span>
+      <span class="font-bold">Prize distribution &amp; the closing of the bazaar</span>
+    </li>
+  </ol>
+</section>
+
+<!-- rsvp -->
+<section id="rsvp" class="border-t-4 border-ink bg-tomato px-5 py-20 text-center text-paper">
+  <p class="font-serif text-3xl italic sm:text-4xl">Students, faculty, curious passers-by —</p>
+  <h2 class="mt-2 font-display text-6xl font-extrabold uppercase leading-[0.85] tracking-tighter sm:text-9xl">Come<br>trade<br>ideas.</h2>
+  <div class="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
+    <a href="#" class="w-full border-4 border-ink bg-mustard px-8 py-4 text-lg font-extrabold uppercase text-ink shadow-hard transition duration-200 hover:-translate-y-1 hover:bg-paper focus:outline-none focus-visible:ring-4 focus-visible:ring-ink active:translate-y-1 active:shadow-none sm:w-auto">Register as student</a>
+    <a href="#" class="w-full border-4 border-ink bg-paper px-8 py-4 text-lg font-extrabold uppercase text-ink shadow-hard transition duration-200 hover:-translate-y-1 hover:bg-forest hover:text-paper focus:outline-none focus-visible:ring-4 focus-visible:ring-ink active:translate-y-1 active:shadow-none sm:w-auto">Confirm as faculty</a>
+  </div>
+  <p class="mt-8 text-sm font-bold uppercase tracking-widest">Questions? techfest@yourcollege.edu · +91 00000 00000</p>
+</section>
+
+<footer class="bg-ink px-5 py-6 text-center text-xs font-bold uppercase tracking-widest text-mustard">
+  Byte Bazaar © Annual Tech Fest · Dept. of CSE · Built with Tailwind CSS (CDN)
+</footer>
+
+</body>
+</html>
