@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Practical Result Sheet — Student Grade Calculator</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&family=Special+Elite&display=swap" rel="stylesheet">
+  <style>
+/* ---------- Design tokens ---------- */
+:root {
+  --desk: #cbb99b;
+  --paper: #fbfaf4;
+  --rule: #d6dbe0;
+  --pencil: #3a3a38;
+  --red: #c8372d;
+  --green: #2f7d4b;
+  --highlight: #fff1a1;
+  --typewriter: "Special Elite", "Courier New", monospace;
+  --hand: "Caveat", "Segoe Print", cursive;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  display: grid;
+  place-items: start center;
+  padding: 36px 14px 60px;
+  background:
+    radial-gradient(rgba(0, 0, 0, 0.07) 1px, transparent 1px) 0 0 / 14px 14px,
+    var(--desk);
+  color: var(--pencil);
+  font-family: var(--typewriter);
+}
+
+/* ---------- Notebook page ---------- */
+.notebook {
+  position: relative;
+  width: min(680px, 100%);
+  padding: 30px 26px 34px 84px;
+  background: var(--paper);
+  border-radius: 6px;
+  box-shadow: 0 1px 0 #fff inset, 0 2px 0 #e4dfd0, 0 14px 30px rgba(60, 40, 10, 0.25);
+}
+/* red margin line */
+.notebook::before {
+  content: "";
+  position: absolute;
+  inset: 0 auto 0 62px;
+  width: 2px;
+  background: rgba(200, 55, 45, 0.55);
+}
+/* binder holes showing the desk */
+.notebook::after {
+  content: "";
+  position: absolute;
+  inset: 0 auto 0 16px;
+  width: 24px;
+  background: radial-gradient(circle at 12px 12px, var(--desk) 0 8px, rgba(0,0,0,.25) 8px 9.5px, transparent 10px) 0 0 / 24px 66px repeat-y;
+}
+
+.sticky {
+  position: absolute;
+  top: -18px;
+  right: 14px;
+  padding: 10px 14px;
+  background: #ffe680;
+  font-family: var(--hand);
+  font-size: 1.25rem;
+  line-height: 1.2;
+  text-align: center;
+  transform: rotate(4deg);
+  box-shadow: 0 6px 10px rgba(0, 0, 0, 0.18);
+}
+
+.title {
+  margin: 0;
+  font-family: var(--hand);
+  font-size: clamp(2.4rem, 8vw, 3.4rem);
+  font-weight: 700;
+  line-height: 1;
+  transform: rotate(-1deg);
+}
+.title span {
+  background: linear-gradient(transparent 62%, var(--highlight) 62% 92%, transparent 92%);
+  padding: 0 6px;
+}
+.sub { margin: 10px 0 22px; font-size: 0.9rem; color: #6b6a63; }
+
+/* ---------- Ruled form rows ---------- */
+.row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 96px auto 26px;
+  align-items: center;
+  gap: 8px;
+  min-height: 52px;
+  padding: 4px 0;
+  border-bottom: 1px solid var(--rule);
+}
+.row.text { grid-template-columns: 96px minmax(0, 1fr); }
+
+label { font-size: 0.92rem; }
+
+input {
+  width: 100%;
+  border: 0;
+  border-bottom: 2px dotted #8a8a82;
+  background: transparent;
+  color: var(--pencil);
+  font-family: var(--hand);
+  font-size: 1.9rem;
+  font-weight: 500;
+  text-align: center;
+  padding: 0 4px;
+  border-radius: 3px 3px 0 0;
+  transition: background 0.2s;
+}
+input.plain { text-align: left; font-size: 1.5rem; }
+input::placeholder { color: #b9b8ae; }
+input:focus { outline: none; background: var(--highlight); border-bottom-style: solid; }
+input[type="number"] { -moz-appearance: textfield; }
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+
+
+input.invalid { background: #fde3df; border-bottom: 2px solid var(--red); }
+
+.out { font-size: 0.8rem; color: #8a8a82; }
+
+.flag { font-family: var(--hand); font-size: 1.8rem; font-weight: 700; text-align: center; }
+.flag.ok { color: var(--green); }
+.flag.bad { color: var(--red); }
+
+.err {
+  grid-column: 1 / -1;
+  font-family: var(--hand);
+  font-size: 1.25rem;
+  color: var(--red);
+}
+.err:empty { display: none; }
+
+/* ---------- Buttons ---------- */
+.actions { display: flex; align-items: center; gap: 22px; margin-top: 26px; }
+
+.btn-calc {
+  padding: 12px 26px;
+  border: 3px solid var(--red);
+  border-radius: 6px;
+  background: transparent;
+  color: var(--red);
+  font-family: var(--typewriter);
+  font-size: 1.05rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transform: rotate(-1.5deg);
+  transition: background 0.2s, color 0.2s, transform 0.15s;
+}
+.btn-calc:hover { background: var(--red); color: var(--paper); }
+.btn-calc:active { transform: rotate(-1.5deg) translateY(3px); }
+.btn-calc:focus-visible,
+.btn-reset:focus-visible { outline: 3px solid #e6b800; outline-offset: 3px; }
+
+.btn-reset {
+  border: 0;
+  background: none;
+  color: var(--pencil);
+  font-family: var(--hand);
+  font-size: 1.4rem;
+  white-space: nowrap;
+  text-decoration: underline wavy #b9b8ae;
+  text-underline-offset: 5px;
+  cursor: pointer;
+}
+.btn-reset:hover { color: var(--red); }
+
+/* ---------- Validation alert ---------- */
+.alert {
+  margin: 18px 0 0;
+  padding: 10px 14px;
+  border: 2px dashed var(--red);
+  border-radius: 4px;
+  background: #fff0ed;
+  color: var(--red);
+  font-family: var(--hand);
+  font-size: 1.45rem;
+  line-height: 1.2;
+}
+.alert[hidden], .result[hidden] { display: none; }
+
+/* ---------- Result area ---------- */
+.result {
+  --ink: var(--green);
+  margin-top: 30px;
+  padding-top: 18px;
+  border-top: 4px double var(--rule);
+}
+.result.fail { --ink: var(--red); }
+
+.result h2 {
+  margin: 0;
+  font-family: var(--hand);
+  font-size: 2.1rem;
+  color: var(--red);
+}
+.who { margin: 2px 0 14px; font-size: 0.95rem; }
+
+.grid { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 20px; }
+
+.stats { margin: 0; flex: 1 1 220px; }
+.stats div { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; padding: 4px 0; border-bottom: 1px solid var(--rule); }
+.stats dt { font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.1em; }
+.stats dd { margin: 0; font-family: var(--hand); font-size: 2rem; font-weight: 700; }
+#rStatus { color: var(--ink); }
+
+/* rubber stamp */
+.stamp {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 150px;
+  height: 150px;
+  border: 5px double var(--ink);
+  border-radius: 50%;
+  color: var(--ink);
+  transform: rotate(-12deg);
+  mix-blend-mode: multiply;
+  opacity: 0.92;
+}
+.stamp b { font-size: 3.6rem; line-height: 1; }
+.stamp span { font-size: 0.95rem; letter-spacing: 0.25em; padding-left: 0.25em; }
+.stamp.slam { animation: slam 0.55s cubic-bezier(0.2, 0.9, 0.3, 1.2); }
+
+@keyframes slam {
+  0%   { transform: scale(2.6) rotate(-32deg); opacity: 0; }
+  60%  { transform: scale(0.92) rotate(-10deg); opacity: 1; }
+  100% { transform: scale(1) rotate(-12deg); opacity: 0.92; }
+}
+
+.remark {
+  margin: 16px 0 6px;
+  font-family: var(--hand);
+  font-size: 1.7rem;
+  line-height: 1.15;
+  color: var(--red);
+}
+.details { margin: 0; padding-left: 20px; font-size: 0.88rem; line-height: 1.7; }
+.details b { background: linear-gradient(transparent 55%, var(--highlight) 55%); }
+
+/* ---------- Small screens ---------- */
+@media (max-width: 520px) {
+  .notebook { padding: 26px 16px 28px 52px; }
+  .notebook::before { left: 38px; }
+  .notebook::after { left: 6px; }
+  .row { grid-template-columns: minmax(0, 1fr) 70px auto 22px; }
+  .row.text { grid-template-columns: 76px minmax(0, 1fr); }
+  .sticky { position: static; display: inline-block; margin: 0 0 12px; font-size: 1.1rem; transform: rotate(-2deg); }
+  .stamp { margin: 0 auto; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .stamp.slam { animation: none; }
+}
+</style>
+</head>
+<body>
+
+  <main class="notebook">
+
+    <aside class="sticky" aria-label="Rules">
+      Each subject is out of <b>100</b>.<br>Pass mark: <b>35</b>
+    </aside>
+
+    <h1 class="title"><span>Practical Result Sheet</span></h1>
+    <p class="sub">Enter the marks, press calculate, and let the red pen do the rest.</p>
+
+    <noscript><p class="alert">JavaScript is turned off in this browser. Please enable it to calculate results.</p></noscript>
+
+    <!-- Step 1: form with numeric inputs + calculate button -->
+    <form id="gradeForm" novalidate>
+
+      <div class="row text">
+        <label for="name">Student</label>
+        <input id="name" name="name" type="text" class="plain" placeholder="Optional" autocomplete="off">
+      </div>
+      <div class="row text">
+        <label for="roll">Roll no.</label>
+        <input id="roll" name="roll" type="text" class="plain" placeholder="Optional" autocomplete="off">
+      </div>
+
+      <div class="row">
+        <label for="m1">Python Programming</label>
+        <input id="m1" class="mark" type="text" inputmode="decimal" autocomplete="off" placeholder="__" data-subject="Python Programming" aria-describedby="e1">
+        <span class="out">/ 100</span><span class="flag" aria-hidden="true"></span>
+        <small class="err" id="e1"></small>
+      </div>
+      <div class="row">
+        <label for="m2">Data Structures</label>
+        <input id="m2" class="mark" type="text" inputmode="decimal" autocomplete="off" placeholder="__" data-subject="Data Structures" aria-describedby="e2">
+        <span class="out">/ 100</span><span class="flag" aria-hidden="true"></span>
+        <small class="err" id="e2"></small>
+      </div>
+      <div class="row">
+        <label for="m3">Database Systems</label>
+        <input id="m3" class="mark" type="text" inputmode="decimal" autocomplete="off" placeholder="__" data-subject="Database Systems" aria-describedby="e3">
+        <span class="out">/ 100</span><span class="flag" aria-hidden="true"></span>
+        <small class="err" id="e3"></small>
+      </div>
+      <div class="row">
+        <label for="m4">Engineering Maths</label>
+        <input id="m4" class="mark" type="text" inputmode="decimal" autocomplete="off" placeholder="__" data-subject="Engineering Maths" aria-describedby="e4">
+        <span class="out">/ 100</span><span class="flag" aria-hidden="true"></span>
+        <small class="err" id="e4"></small>
+      </div>
+      <div class="row">
+        <label for="m5">Communication Skills</label>
+        <input id="m5" class="mark" type="text" inputmode="decimal" autocomplete="off" placeholder="__" data-subject="Communication Skills" aria-describedby="e5">
+        <span class="out">/ 100</span><span class="flag" aria-hidden="true"></span>
+        <small class="err" id="e5"></small>
+      </div>
+
+      <div class="actions">
+        <button type="button" id="calcBtn" class="btn-calc">Calculate</button>
+        <button type="button" id="resetBtn" class="btn-reset">Clear page</button>
+      </div>
+    </form>
+
+    <!-- Validation alert (filled by JavaScript) -->
+    <p id="alert" class="alert" role="alert" hidden></p>
+
+    <!-- Step 6: result area (filled by JavaScript) -->
+    <section id="result" class="result" aria-live="polite" hidden>
+      <h2>Teacher's remarks</h2>
+      <p class="who" id="rName"></p>
+
+      <div class="grid">
+        <dl class="stats">
+          <div><dt>Total</dt><dd id="rTotal"></dd></div>
+          <div><dt>Percentage</dt><dd id="rPercent"></dd></div>
+          <div><dt>Grade</dt><dd id="rGrade"></dd></div>
+          <div><dt>Result</dt><dd id="rStatus"></dd></div>
+        </dl>
+
+        <div class="stamp" id="stamp" aria-hidden="true">
+          <b id="stampGrade"></b>
+          <span id="stampStatus"></span>
+        </div>
+      </div>
+
+      <p class="remark" id="rRemark"></p>
+      <ul class="details" id="rDetails"></ul>
+    </section>
+
+  </main>
+
+  <script>
+'use strict';
+
+/* ------------------------------------------------------------
+   Student Grade Calculator
+   Flow: submit -> read & parse -> validate -> total -> percentage
+         -> grade (if / else if / else) -> render to the DOM
+   ------------------------------------------------------------ */
+
+const MAX_MARKS = 100;   // maximum marks for each subject
+const PASS_MARK = 35;    // minimum marks needed in every subject
+
+// Step 3: select elements we need to work with
+const form     = document.getElementById('gradeForm');
+const inputs   = Array.from(document.querySelectorAll('.mark'));
+const alertBox = document.getElementById('alert');
+const result   = document.getElementById('result');
+const stamp    = document.getElementById('stamp');
+
+// Step 3: bind event listeners
+// A click listener on a normal button works everywhere (also in sandboxed
+// previews that block form submission), so it is the main trigger.
+document.getElementById('calcBtn').addEventListener('click', calculate);
+
+document.getElementById('resetBtn').addEventListener('click', function () {
+  form.reset();                    // empties every input
+  clearAll();                      // removes alerts, ticks and results
+});
+
+// If the form is ever submitted (for example Enter key), do not reload the page
+form.addEventListener('submit', function (event) {
+  event.preventDefault();
+  calculate();
+});
+
+inputs.forEach(function (input) {
+  input.addEventListener('input', function () {
+    clearFieldError(input);        // remove the red note as soon as the user edits
+  });
+  input.addEventListener('keydown', function (event) {
+    if (event.key === 'Enter') {   // Enter inside a mark box also calculates
+      event.preventDefault();
+      calculate();
+    }
+  });
+});
+
+/* ---------- Main routine ---------- */
+function calculate() {
+  const marks = [];                // numeric marks, one per subject
+  const errors = [];               // inputs that failed validation
+
+  // Step 4: extract values, convert string -> number, validate
+  inputs.forEach(function (input) {
+    const row  = input.closest('.row');
+    const err  = row.querySelector('.err');
+    const flag = row.querySelector('.flag');
+
+    const raw   = input.value.trim().replace(',', '.');  // .value is always a string
+    const value = parseFloat(raw);      // "80" -> 80 (so 80 + 90 = 170, not "8090")
+    let message = '';
+
+    if (raw === '') {
+      message = 'Please enter the marks for this subject.';
+    } else if (isNaN(Number(raw)) || isNaN(value)) {
+      message = 'Enter a number only (for example 78 or 78.5).';
+    } else if (value < 0 || value > MAX_MARKS) {
+      message = 'Marks must be between 0 and ' + MAX_MARKS + '.';
+    }
+
+    flag.textContent = '';
+    flag.className = 'flag';
+
+    if (message !== '') {
+      err.textContent = message;
+      input.classList.add('invalid');
+      input.setAttribute('aria-invalid', 'true');
+      errors.push(input);
+    } else {
+      err.textContent = '';
+      input.classList.remove('invalid');
+      input.setAttribute('aria-invalid', 'false');
+      marks.push(value);
+    }
+  });
+
+  // Stop here if anything is wrong and tell the user, no page reload
+  if (errors.length > 0) {
+    result.hidden = true;
+    showAlert(errors.length + (errors.length === 1 ? ' field needs' : ' fields need') +
+              ' fixing. Check the red notes.');
+    errors[0].focus();
+    return;
+  }
+  hideAlert();
+
+  // Step 5: arithmetic -> total and percentage
+  let total = 0;
+  for (let i = 0; i < marks.length; i++) {
+    total += marks[i];
+  }
+  const maxTotal   = marks.length * MAX_MARKS;
+  const percentage = (total / maxTotal) * 100;
+
+  // Subject-wise pass check + best / weakest subject
+  const failed = [];
+  let best = 0, weakest = 0;
+  for (let i = 0; i < marks.length; i++) {
+    if (marks[i] < PASS_MARK) failed.push(i);
+    if (marks[i] > marks[best]) best = i;
+    if (marks[i] < marks[weakest]) weakest = i;
+  }
+  const passed = failed.length === 0;
+
+  const outcome = getGrade(percentage);
+
+  // Step 6: render everything
+  render({
+    marks: marks,
+    total: total,
+    maxTotal: maxTotal,
+    percentage: percentage,
+    grade: outcome.grade,
+    remark: outcome.remark,
+    passed: passed,
+    failed: failed,
+    best: best,
+    weakest: weakest
+  });
+}
+
+/* ---------- Grade ladder (if / else if / else) ---------- */
+function getGrade(p) {
+  let grade, remark;
+
+  if (p >= 90) {
+    grade = 'A+'; remark = 'Outstanding work! Keep it up.';
+  } else if (p >= 80) {
+    grade = 'A';  remark = 'Excellent performance.';
+  } else if (p >= 70) {
+    grade = 'B+'; remark = 'Very good effort.';
+  } else if (p >= 60) {
+    grade = 'B';  remark = 'Good. A little more practice will help.';
+  } else if (p >= 50) {
+    grade = 'C';  remark = 'Fair. Revise the weaker topics.';
+  } else if (p >= 40) {
+    grade = 'D';  remark = 'Just enough. Needs serious revision.';
+  } else {
+    grade = 'F';  remark = 'Not there yet. Let us work on this together.';
+  }
+  return { grade: grade, remark: remark };
+}
+
+/* ---------- Rendering ---------- */
+function render(r) {
+  const name = document.getElementById('name').value.trim();
+  const roll = document.getElementById('roll').value.trim();
+
+  // textContent for plain values (safe even if the name contains HTML)
+  document.getElementById('rName').textContent =
+    (name || 'Student') + (roll ? '  ·  Roll ' + roll : '');
+  document.getElementById('rTotal').textContent =
+    Number(r.total.toFixed(2)) + ' / ' + r.maxTotal;
+  document.getElementById('rGrade').textContent = r.grade;
+  document.getElementById('rStatus').textContent = r.passed ? 'PASS' : 'FAIL';
+  document.getElementById('stampGrade').textContent = r.grade;
+  document.getElementById('stampStatus').textContent = r.passed ? 'PASS' : 'FAIL';
+
+  animatePercent(document.getElementById('rPercent'), r.percentage);
+
+  // pass / fail visual state
+  result.classList.toggle('pass', r.passed);
+  result.classList.toggle('fail', !r.passed);
+
+  // red-pen tick or cross next to every subject
+  inputs.forEach(function (input, i) {
+    const flag = input.closest('.row').querySelector('.flag');
+    const ok = r.marks[i] >= PASS_MARK;
+    flag.textContent = ok ? '✓' : '✗';
+    flag.className = 'flag ' + (ok ? 'ok' : 'bad');
+  });
+
+  // teacher's remark + details (innerHTML: subject names come from our own HTML)
+  let remark = r.remark;
+  const names = r.failed.map(function (i) { return inputs[i].dataset.subject; });
+  if (names.length > 0) {
+    remark += ' Below the pass mark in: ' + names.join(', ') + '.';
+  }
+  document.getElementById('rRemark').textContent = remark;
+
+  document.getElementById('rDetails').innerHTML =
+    '<li>Strongest subject: <b>' + inputs[r.best].dataset.subject + '</b> (' + r.marks[r.best] + ')</li>' +
+    '<li>Needs most attention: <b>' + inputs[r.weakest].dataset.subject + '</b> (' + r.marks[r.weakest] + ')</li>' +
+    '<li>Subjects passed: <b>' + (r.marks.length - r.failed.length) + ' of ' + r.marks.length + '</b></li>';
+
+  result.hidden = false;
+
+  // restart the stamp animation each time
+  stamp.classList.remove('slam');
+  void stamp.offsetWidth;
+  stamp.classList.add('slam');
+
+  result.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+// count the percentage up from 0 for a small bit of feedback
+function animatePercent(el, target) {
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    el.textContent = target.toFixed(2) + '%';
+    return;
+  }
+  const start = performance.now();
+  const duration = 700;
+  function step(now) {
+    const t = Math.min((now - start) / duration, 1);
+    const eased = 1 - Math.pow(1 - t, 3);
+    el.textContent = (target * eased).toFixed(2) + '%';
+    if (t < 1) requestAnimationFrame(step);
+  }
+  requestAnimationFrame(step);
+}
+
+/* ---------- Helpers ---------- */
+function showAlert(text) { alertBox.textContent = text; alertBox.hidden = false; }
+function hideAlert()     { alertBox.textContent = '';   alertBox.hidden = true;  }
+
+function clearFieldError(input) {
+  const row = input.closest('.row');
+  row.querySelector('.err').textContent = '';
+  input.classList.remove('invalid');
+  input.setAttribute('aria-invalid', 'false');
+}
+
+function clearAll() {
+  hideAlert();
+  result.hidden = true;
+  inputs.forEach(function (input) {
+    clearFieldError(input);
+    const flag = input.closest('.row').querySelector('.flag');
+    flag.textContent = '';
+    flag.className = 'flag';
+  });
+}
+</script>
+</body>
+</html>

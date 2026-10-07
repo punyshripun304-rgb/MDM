@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Thaali Audit - hostel mess food waste tracker</title>
+<!-- Tailwind CSS via CDN -->
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;700;800&family=Figtree:wght@400;500;600&display=swap" rel="stylesheet">
+<script>
+  tailwind.config = {
+    theme: { extend: {
+      colors: { steel:'#D5DEE3', steeldk:'#9FB0B9', ink:'#14213D', haldi:'#F2B705', beet:'#8E1B4F', palak:'#1F6B4A', paper:'#EEF3F5' },
+      fontFamily: { display:['"Bricolage Grotesque"','system-ui','sans-serif'], body:['Figtree','system-ui','sans-serif'] }
+    } }
+  }
+</script>
+<style>
+  body { background: #EEF3F5; background-image: radial-gradient(#C3CFD6 1.2px, transparent 1.2px); background-size: 22px 22px; }
+  .tray { box-shadow: 0 6px 0 #9FB0B9, 0 14px 30px -10px rgba(20,33,61,.35); }
+  .fill { transition: height .8s cubic-bezier(.3,1.3,.5,1), background-color .4s; }
+  .pop { animation: pop .35s ease-out; }
+  @keyframes pop { from { transform: scale(.92); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+  @media (prefers-reduced-motion: reduce) { .fill, .pop { transition: none; animation: none; } }
+  :focus-visible { outline: 3px solid #F2B705; outline-offset: 2px; }
+</style>
+</head>
+<body class="font-body text-ink min-h-screen">
+
+<!-- STEP 1: HTML structure -->
+<header class="max-w-6xl mx-auto px-5 pt-6 flex items-center justify-between">
+  <a href="#top" class="font-display font-extrabold text-xl flex items-center gap-2">
+    <span class="w-7 h-7 rounded-full bg-haldi border-4 border-ink inline-block"></span> Thaali Audit
+  </a>
+  <nav class="flex gap-5 text-sm font-medium">
+    <a href="#log" class="hover:underline underline-offset-4">Log a meal</a>
+    <a href="#history" class="hover:underline underline-offset-4">Plate history</a>
+  </nav>
+</header>
+
+<main id="top" class="max-w-6xl mx-auto px-5 pb-16">
+
+  <!-- Hero: the live plate -->
+  <section class="grid md:grid-cols-2 gap-10 items-center py-10 md:py-16">
+    <div>
+      <h1 class="font-display font-extrabold text-5xl sm:text-6xl leading-[0.95] tracking-tight">
+        Every plate that comes back full is food someone paid for.
+      </h1>
+      <p class="mt-5 text-lg max-w-md text-ink/80">
+        Log what is left on your tray after each mess meal. The plate on the right fills up as the waste adds up, so your hostel can see where food goes.
+      </p>
+      <a href="#log" class="inline-block mt-7 bg-ink text-white font-semibold px-6 py-3 rounded-full hover:bg-beet transition-colors">Log today's first meal</a>
+    </div>
+
+    <div class="flex flex-col items-center">
+      <div class="tray bg-steel rounded-[2.5rem] p-6 sm:p-8 w-full max-w-md">
+        <div class="relative mx-auto w-64 h-64 sm:w-72 sm:h-72 rounded-full bg-paper border-[10px] border-steeldk overflow-hidden" role="img" aria-label="Plate showing today's waste against the daily goal">
+          <div id="plateFill" class="fill absolute bottom-0 left-0 w-full bg-palak" style="height:0%"></div>
+          <div class="absolute inset-0 flex flex-col items-center justify-center text-center">
+            <span id="plateGrams" class="font-display font-extrabold text-5xl drop-shadow">0 g</span>
+            <span id="plateNote" class="text-sm font-semibold mt-1 px-3">Clean plate so far</span>
+          </div>
+        </div>
+        <div class="mt-5 grid grid-cols-3 gap-3 text-center">
+          <div class="bg-paper rounded-full aspect-square flex flex-col items-center justify-center border-4 border-steeldk">
+            <b id="statMeals" class="font-display text-2xl">0</b><span class="text-xs">meals</span>
+          </div>
+          <div class="bg-paper rounded-full aspect-square flex flex-col items-center justify-center border-4 border-steeldk">
+            <b id="statAvg" class="font-display text-2xl">0</b><span class="text-xs">g per meal</span>
+          </div>
+          <div class="bg-paper rounded-full aspect-square flex flex-col items-center justify-center border-4 border-steeldk">
+            <b id="statFeed" class="font-display text-2xl">0</b><span class="text-xs">people fed</span>
+          </div>
+        </div>
+      </div>
+      <p class="text-xs mt-4 text-ink/60 max-w-xs text-center">Daily goal is 500 g across the hostel. One serving is counted as 400 g.</p>
+    </div>
+  </section>
+
+  <!-- STEP 2: Responsive layout (1 column on mobile, 5-column grid on desktop) -->
+  <section class="grid lg:grid-cols-5 gap-8">
+
+    <!-- STEP 3: Form with JavaScript validation -->
+    <div id="log" class="lg:col-span-2 scroll-mt-6">
+      <form id="wasteForm" novalidate class="bg-white rounded-[2rem] border-4 border-ink p-6 sm:p-7 shadow-[8px_8px_0_#F2B705]">
+        <h2 class="font-display font-bold text-2xl mb-1">Log a meal</h2>
+        <p class="text-sm text-ink/70 mb-5">Weigh what is left on your tray, or estimate with the helper buttons.</p>
+
+        <label class="block text-sm font-semibold mb-1" for="name">Your name</label>
+        <input id="name" type="text" autocomplete="off" class="w-full border-2 border-steeldk rounded-xl px-4 py-2.5 focus:border-ink" placeholder="e.g. Aarav">
+        <p id="nameErr" class="text-beet text-sm mt-1 min-h-[1.25rem]"></p>
+
+        <label class="block text-sm font-semibold mb-1 mt-2" for="meal">Which meal?</label>
+        <select id="meal" class="w-full border-2 border-steeldk rounded-xl px-4 py-2.5 bg-white focus:border-ink">
+          <option value="">Choose a meal</option>
+          <option>Breakfast</option><option>Lunch</option><option>Snacks</option><option>Dinner</option>
+        </select>
+        <p id="mealErr" class="text-beet text-sm mt-1 min-h-[1.25rem]"></p>
+
+        <label class="block text-sm font-semibold mb-1 mt-2" for="grams">Leftover food (grams)</label>
+        <input id="grams" type="number" inputmode="numeric" class="w-full border-2 border-steeldk rounded-xl px-4 py-2.5 focus:border-ink" placeholder="0 to 1000">
+        <div class="flex flex-wrap gap-2 mt-2" id="quick">
+          <button type="button" data-g="0" class="text-sm px-3 py-1 rounded-full bg-steel hover:bg-haldi">Clean plate</button>
+          <button type="button" data-g="50" class="text-sm px-3 py-1 rounded-full bg-steel hover:bg-haldi">A spoonful</button>
+          <button type="button" data-g="150" class="text-sm px-3 py-1 rounded-full bg-steel hover:bg-haldi">One katori</button>
+          <button type="button" data-g="300" class="text-sm px-3 py-1 rounded-full bg-steel hover:bg-haldi">Half plate</button>
+        </div>
+        <p id="gramsErr" class="text-beet text-sm mt-1 min-h-[1.25rem]"></p>
+
+        <label class="block text-sm font-semibold mb-1 mt-2" for="reason">Why was it left? <span class="font-normal text-ink/60">(optional)</span></label>
+        <input id="reason" type="text" maxlength="60" class="w-full border-2 border-steeldk rounded-xl px-4 py-2.5 focus:border-ink" placeholder="Too salty, too much served, not hungry">
+
+        <button type="submit" class="mt-6 w-full bg-ink text-white font-semibold py-3 rounded-full hover:bg-palak transition-colors">Add to the plate</button>
+        <p id="formMsg" class="text-palak text-sm font-semibold mt-3 min-h-[1.25rem]" aria-live="polite"></p>
+      </form>
+    </div>
+
+    <!-- STEP 4: Interactive buttons and dynamic content -->
+    <div id="history" class="lg:col-span-3 scroll-mt-6">
+      <div class="flex flex-wrap items-center justify-between gap-3 mb-4">
+        <h2 class="font-display font-bold text-2xl">Plate history</h2>
+        <div id="filters" class="flex flex-wrap gap-2 text-sm font-semibold">
+          <button data-f="All" class="f-btn px-4 py-1.5 rounded-full border-2 border-ink bg-ink text-white">All</button>
+          <button data-f="Breakfast" class="f-btn px-4 py-1.5 rounded-full border-2 border-ink">Breakfast</button>
+          <button data-f="Lunch" class="f-btn px-4 py-1.5 rounded-full border-2 border-ink">Lunch</button>
+          <button data-f="Snacks" class="f-btn px-4 py-1.5 rounded-full border-2 border-ink">Snacks</button>
+          <button data-f="Dinner" class="f-btn px-4 py-1.5 rounded-full border-2 border-ink">Dinner</button>
+        </div>
+      </div>
+
+      <div id="insight" class="bg-haldi/30 border-2 border-haldi rounded-2xl px-4 py-3 text-sm mb-4 hidden"></div>
+      <ul id="list" class="space-y-3"></ul>
+
+      <div class="mt-5 flex justify-between items-center text-sm">
+        <span id="count" class="text-ink/60"></span>
+        <button id="clearAll" class="underline underline-offset-4 hover:text-beet">Clear all entries</button>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="text-center text-sm text-ink/60 pb-8">Entries stay in your browser. Nothing is sent anywhere.</footer>
+
+<script>
+  // STEP 5: Application logic
+  const GOAL = 500, SERVING = 400;
+  const colors = { Breakfast:'bg-haldi', Lunch:'bg-palak text-white', Snacks:'bg-steeldk', Dinner:'bg-beet text-white' };
+  let entries = [];
+  let filter = 'All';
+  try { entries = JSON.parse(localStorage.getItem('thaali') || '[]'); } catch (e) { entries = []; }
+
+  const $ = id => document.getElementById(id);
+  const save = () => { try { localStorage.setItem('thaali', JSON.stringify(entries)); } catch (e) {} };
+  const esc = s => s.replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+  // Form validation
+  function validate() {
+    let ok = true;
+    const name = $('name').value.trim(), meal = $('meal').value, g = $('grams').value;
+    $('nameErr').textContent = $('mealErr').textContent = $('gramsErr').textContent = '';
+    if (name.length < 2) { $('nameErr').textContent = 'Enter a name with at least 2 letters.'; ok = false; }
+    else if (!/^[A-Za-z .'-]+$/.test(name)) { $('nameErr').textContent = 'Use letters only in the name.'; ok = false; }
+    if (!meal) { $('mealErr').textContent = 'Pick the meal you are logging.'; ok = false; }
+    if (g === '') { $('gramsErr').textContent = 'Enter the leftover weight. Use 0 for a clean plate.'; ok = false; }
+    else if (isNaN(g) || g < 0 || g > 1000) { $('gramsErr').textContent = 'Weight must be between 0 and 1000 grams.'; ok = false; }
+    return ok;
+  }
+
+  $('wasteForm').addEventListener('submit', e => {
+    e.preventDefault();
+    if (!validate()) return;
+    entries.unshift({
+      id: Date.now(), name: $('name').value.trim(), meal: $('meal').value,
+      grams: Math.round(+$('grams').value), reason: $('reason').value.trim(),
+      time: new Date().toLocaleTimeString([], { hour:'2-digit', minute:'2-digit' })
+    });
+    save(); render();
+    $('grams').value = ''; $('reason').value = '';
+    $('formMsg').textContent = 'Added. Check how the plate changed.';
+    setTimeout(() => $('formMsg').textContent = '', 3000);
+  });
+
+  // Quick-fill buttons
+  $('quick').addEventListener('click', e => {
+    const b = e.target.closest('button'); if (!b) return;
+    $('grams').value = b.dataset.g; $('gramsErr').textContent = '';
+  });
+
+  // Filter buttons
+  $('filters').addEventListener('click', e => {
+    const b = e.target.closest('button'); if (!b) return;
+    filter = b.dataset.f; render();
+  });
+
+  // Delete one / clear all (event delegation)
+  $('list').addEventListener('click', e => {
+    const b = e.target.closest('[data-del]'); if (!b) return;
+    entries = entries.filter(x => x.id !== +b.dataset.del); save(); render();
+  });
+  $('clearAll').addEventListener('click', () => {
+    if (entries.length && confirm('Delete all logged meals?')) { entries = []; save(); render(); }
+  });
+
+  function render() {
+    const total = entries.reduce((s, x) => s + x.grams, 0);
+    const n = entries.length;
+
+    // Plate: fill level and colour show progress against the goal
+    const pct = Math.min(total / GOAL, 1) * 100;
+    const fill = $('plateFill');
+    fill.style.height = pct + '%';
+    fill.className = 'fill absolute bottom-0 left-0 w-full ' + (pct < 50 ? 'bg-palak' : pct < 100 ? 'bg-haldi' : 'bg-beet');
+    $('plateGrams').textContent = total + ' g';
+    $('plateGrams').className = 'font-display font-extrabold text-5xl drop-shadow ' + (pct >= 100 ? 'text-white' : 'text-ink');
+    $('plateNote').textContent = n === 0 ? 'Clean plate so far' : pct < 50 ? 'Well within the daily goal' : pct < 100 ? 'Getting close to the 500 g goal' : 'Over the daily goal';
+    $('statMeals').textContent = n;
+    $('statAvg').textContent = n ? Math.round(total / n) : 0;
+    $('statFeed').textContent = (total / SERVING).toFixed(1);
+
+    // Insight: which meal wastes the most
+    const by = {};
+    entries.forEach(x => by[x.meal] = (by[x.meal] || 0) + x.grams);
+    const top = Object.entries(by).sort((a, b) => b[1] - a[1])[0];
+    const ins = $('insight');
+    if (top && top[1] > 0) { ins.classList.remove('hidden'); ins.innerHTML = '<b>' + top[0] + '</b> leaves the most food behind: ' + top[1] + ' g so far.'; }
+    else ins.classList.add('hidden');
+
+    // Filter buttons look
+    document.querySelectorAll('.f-btn').forEach(b => {
+      const on = b.dataset.f === filter;
+      b.className = 'f-btn px-4 py-1.5 rounded-full border-2 border-ink ' + (on ? 'bg-ink text-white' : 'hover:bg-haldi');
+    });
+
+    // List
+    const shown = entries.filter(x => filter === 'All' || x.meal === filter);
+    $('list').innerHTML = shown.length ? shown.map((x, i) => `
+      <li class="${i === 0 ? 'pop ' : ''}flex items-center gap-4 bg-white rounded-2xl border-2 border-steeldk p-4">
+        <span class="shrink-0 w-12 h-12 rounded-full flex items-center justify-center text-xs font-bold ${colors[x.meal]}">${x.meal.slice(0, 3)}</span>
+        <div class="min-w-0 flex-1">
+          <p class="font-semibold truncate">${esc(x.name)} <span class="font-normal text-ink/60">at ${x.time}</span></p>
+          <p class="text-sm text-ink/70 truncate">${x.reason ? esc(x.reason) : 'No reason given'}</p>
+        </div>
+        <b class="font-display text-xl">${x.grams} g</b>
+        <button data-del="${x.id}" aria-label="Delete entry" class="w-8 h-8 rounded-full hover:bg-beet hover:text-white text-lg leading-none">&times;</button>
+      </li>`).join('')
+      : `<li class="border-2 border-dashed border-steeldk rounded-2xl p-8 text-center text-ink/70">${n ? 'No ' + filter.toLowerCase() + ' entries yet.' : 'Nothing logged yet. Use the form to add your first meal.'}</li>`;
+    $('count').textContent = shown.length + ' of ' + n + ' entries shown';
+  }
+  render();
+</script>
+</body>
+</html>

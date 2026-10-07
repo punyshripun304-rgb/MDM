@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Department Help Desk — Frequently Asked Questions</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Rokkitt:wght@600;800&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* ---------- Tokens ---------- */
+:root {
+  --room: #231813;
+  --oak: #b07f45;
+  --oak-dark: #6e4727;
+  --brass: #c9a24b;
+  --brass-light: #e6c772;
+  --brass-dark: #8f6f23;
+  --card: #f5efd9;
+  --ink: #2b221b;
+  --red: #a8372c;
+  --slab: "Rokkitt", "Rockwell", Georgia, serif;
+  --mono: "IBM Plex Mono", "Courier New", monospace;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  padding: max(28px, env(safe-area-inset-top)) 14px max(50px, env(safe-area-inset-bottom));
+  background-color: var(--room);
+  background-image: radial-gradient(ellipse at 50% 0%, #3d2819 0%, var(--room) 62%);
+  background-attachment: fixed;
+  color: var(--card);
+  font-family: var(--mono);
+}
+
+/* ---------- Cabinet ---------- */
+.cabinet {
+  width: min(760px, 100%);
+  margin: 0 auto;
+  padding: 18px;
+  border: 2px solid #3b2615;
+  border-radius: 14px;
+  background:
+    repeating-linear-gradient(90deg, rgba(0, 0, 0, 0.06) 0 2px, transparent 2px 8px),
+    linear-gradient(#74492a, #5a3920);
+  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.55), inset 0 2px 0 rgba(255, 255, 255, 0.12);
+}
+
+.plaque {
+  margin: 0 auto 18px;
+  padding: 14px 18px;
+  text-align: center;
+  color: #3a2a08;
+  border-radius: 6px;
+  background: linear-gradient(var(--brass-light), var(--brass) 50%, var(--brass-dark));
+  box-shadow: inset 0 0 0 2px rgba(58, 42, 8, 0.45), inset 0 2px 0 rgba(255, 255, 255, 0.5), 0 4px 0 rgba(0, 0, 0, 0.35);
+}
+.plaque small {
+  display: block;
+  font-size: 0.72rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+}
+.plaque h1 {
+  margin: 4px 0 2px;
+  font-family: var(--slab);
+  font-weight: 800;
+  font-size: clamp(1.7rem, 6vw, 2.5rem);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  line-height: 1.05;
+}
+.plaque p { margin: 0; font-size: 0.82rem; }
+
+/* ---------- Tools ---------- */
+.tools { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin-bottom: 14px; }
+
+.search {
+  flex: 1 1 240px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  border: 2px solid var(--brass-dark);
+  border-radius: 4px;
+  background: var(--card);
+  color: var(--ink);
+  box-shadow: inset 0 0 0 2px var(--brass), inset 0 2px 6px rgba(0, 0, 0, 0.18);
+}
+.search span { font-family: var(--slab); font-weight: 800; font-size: 0.8rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--red); }
+.search input {
+  flex: 1;
+  min-width: 0;
+  border: 0;
+  background: transparent;
+  color: var(--ink);
+  font: 500 0.95rem var(--mono);
+}
+.search input:focus { outline: none; }
+.search:focus-within { box-shadow: inset 0 0 0 2px var(--brass-light), 0 0 0 3px var(--brass-light); }
+
+.btn {
+  padding: 10px 16px;
+  border: 0;
+  border-radius: 4px;
+  background: linear-gradient(var(--brass-light), var(--brass-dark));
+  color: #3a2a08;
+  font: 800 0.85rem var(--slab);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  cursor: pointer;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.6), 0 3px 0 rgba(0, 0, 0, 0.4);
+  transition: transform 0.15s, filter 0.15s, box-shadow 0.15s;
+}
+.btn:hover { filter: brightness(1.08); transform: translateY(-1px); }
+.btn:active { transform: translateY(3px); box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.6), 0 0 0 rgba(0, 0, 0, 0.4); }
+.btn:focus-visible { outline: 3px solid #fff3c4; outline-offset: 2px; }
+
+.count { margin: 0 0 12px; font-size: 0.78rem; color: var(--brass-light); letter-spacing: 0.06em; }
+
+/* ---------- FAQ item (drawer) ---------- */
+.faq-item { margin-bottom: 14px; }
+.faq-item.hide { display: none; }
+
+/* the drawer front = the question (clickable) */
+.faq-question {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  width: 100%;
+  padding: 12px 14px;
+  border: 0;
+  border-radius: 8px;
+  text-align: left;
+  cursor: pointer;
+  color: inherit;
+  background:
+    repeating-linear-gradient(90deg, rgba(0, 0, 0, 0.07) 0 1px, transparent 1px 6px),
+    linear-gradient(#bc8a4e, #a4733e);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.35), inset 0 -3px 0 rgba(0, 0, 0, 0.25), 0 4px 0 #3f2815;
+  transition: transform 0.25s, box-shadow 0.25s, filter 0.2s;
+}
+.faq-question:hover { filter: brightness(1.07); transform: translateY(-1px); }
+.faq-question:focus-visible { outline: 3px solid #fff3c4; outline-offset: 3px; }
+.faq-question.active {
+  transform: translateY(-3px);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.35), inset 0 -3px 0 rgba(0, 0, 0, 0.25), 0 10px 0 #3f2815, 0 18px 24px rgba(0, 0, 0, 0.4);
+}
+
+/* brass label holder */
+.plate {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  border: 2px solid var(--brass-dark);
+  border-radius: 4px;
+  background: var(--card);
+  color: var(--ink);
+  box-shadow: inset 0 0 0 2px var(--brass), inset 0 2px 6px rgba(0, 0, 0, 0.18);
+}
+.no {
+  padding-right: 10px;
+  border-right: 1px solid rgba(0, 0, 0, 0.25);
+  font-family: var(--slab);
+  font-weight: 800;
+  font-size: 1.15rem;
+  color: var(--red);
+}
+.label { font-family: var(--slab); font-weight: 600; font-size: 1.18rem; line-height: 1.2; }
+
+/* brass pull handle */
+.pull {
+  flex: none;
+  width: 54px;
+  height: 22px;
+  border-radius: 12px;
+  background: linear-gradient(var(--brass-light), #b88c2f 55%, var(--brass-dark));
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.65), 0 3px 0 rgba(0, 0, 0, 0.4);
+  transition: transform 0.3s;
+}
+.faq-question.active .pull { transform: translateY(5px) scaleX(0.92); }
+
+/* the answer: collapsed by default, expanded when .active is toggled */
+.faq-answer {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.45s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.faq-answer.active { grid-template-rows: 1fr; }
+.reveal { min-height: 0; overflow: hidden; }
+
+.drawer {
+  margin: 0 10px;
+  padding: 18px 14px 20px;
+  border: 3px solid var(--oak-dark);
+  border-top: 0;
+  border-radius: 0 0 8px 8px;
+  background: #1b110b;
+  box-shadow: inset 0 10px 16px rgba(0, 0, 0, 0.7);
+}
+.card {
+  position: relative;
+  padding: 16px 20px 34px;
+  border-radius: 3px;
+  background: var(--card);
+  color: var(--ink);
+  font-size: 0.93rem;
+  line-height: 1.7;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.55);
+  opacity: 0;
+  transform: translateY(-18px) rotate(-0.6deg);
+  transition: opacity 0.4s 0.08s, transform 0.5s 0.05s cubic-bezier(0.2, 0.8, 0.2, 1.2);
+}
+.faq-answer.active .card { opacity: 1; transform: translateY(0) rotate(0); }
+.card::after { /* catalogue rod hole */
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: 10px;
+  width: 12px;
+  height: 12px;
+  margin-left: -6px;
+  border-radius: 50%;
+  background: #1b110b;
+  box-shadow: inset 0 1px 3px #000;
+}
+.filed {
+  margin: 0 0 10px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--red);
+  font-family: var(--slab);
+  font-weight: 800;
+  font-size: 0.75rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--red);
+}
+.card p { margin: 0 0 8px; }
+.card p:last-child { margin-bottom: 0; }
+
+/* ---------- Empty state + footer ---------- */
+.empty {
+  padding: 18px;
+  border: 2px dashed var(--brass);
+  border-radius: 8px;
+  color: var(--brass-light);
+  text-align: center;
+}
+.empty[hidden] { display: none; }
+
+.foot { margin: 18px 0 0; text-align: center; font-size: 0.8rem; color: #e9d9b3; }
+
+/* ---------- Small screens ---------- */
+@media (max-width: 520px) {
+  .cabinet { padding: 10px; }
+  .faq-question { padding: 10px; gap: 10px; }
+  .plate { padding: 8px 10px; gap: 8px; }
+  .label { font-size: 1.02rem; }
+  .pull { width: 36px; height: 18px; }
+  .card { padding: 14px 14px 32px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .faq-answer, .card, .faq-question, .pull { transition: none; }
+}
+</style>
+</head>
+<body>
+
+<main class="cabinet">
+
+  <!-- Step 1: HTML structure -->
+  <header class="plaque">
+    <small>[Your College Name] · Dept. of CSE</small>
+    <h1>Help Desk Catalogue</h1>
+    <p>Pull a drawer to find your answer.</p>
+  </header>
+
+  <div class="tools">
+    <label class="search">
+      <span>Search</span>
+      <input id="search" type="search" placeholder="e.g. attendance, marks…" autocomplete="off" aria-label="Search the questions">
+    </label>
+    <button type="button" class="btn" id="expandAll">Open all</button>
+    <button type="button" class="btn" id="collapseAll">Close all</button>
+  </div>
+  <p class="count" id="count" aria-live="polite"></p>
+
+  <section id="faqList">
+
+    <article class="faq-item">
+      <button type="button" class="faq-question" id="q1" aria-expanded="false" aria-controls="a1">
+        <span class="plate"><span class="no">01</span><span class="label">How do I reset my college portal password?</span></span>
+        <span class="pull" aria-hidden="true"></span>
+      </button>
+      <div class="faq-answer" id="a1" role="region" aria-labelledby="q1">
+        <div class="reveal"><div class="drawer"><div class="card">
+          <p class="filed">Filed under: Accounts</p>
+          <p>Click “Forgot password” on the portal login page and enter your roll number. A one-time code is sent to your registered college email.</p>
+          <p>If you can no longer access that email, visit the department office with your ID card and the password will be reset for you.</p>
+        </div></div></div>
+      </div>
+    </article>
+
+    <article class="faq-item">
+      <button type="button" class="faq-question" id="q2" aria-expanded="false" aria-controls="a2">
+        <span class="plate"><span class="no">02</span><span class="label">Where can I find the exam timetable and my hall ticket?</span></span>
+        <span class="pull" aria-hidden="true"></span>
+      </button>
+      <div class="faq-answer" id="a2" role="region" aria-labelledby="q2">
+        <div class="reveal"><div class="drawer"><div class="card">
+          <p class="filed">Filed under: Examinations</p>
+          <p>The timetable is posted on the department notice board and under “Examinations” on the portal at least two weeks before the exams begin.</p>
+          <p>Hall tickets are released a week before the first paper. Download and print yours, and carry it along with your college ID.</p>
+        </div></div></div>
+      </div>
+    </article>
+
+    <article class="faq-item">
+      <button type="button" class="faq-question" id="q3" aria-expanded="false" aria-controls="a3">
+        <span class="plate"><span class="no">03</span><span class="label">What attendance do I need to be allowed to write the exams?</span></span>
+        <span class="pull" aria-hidden="true"></span>
+      </button>
+      <div class="faq-answer" id="a3" role="region" aria-labelledby="q3">
+        <div class="reveal"><div class="drawer"><div class="card">
+          <p class="filed">Filed under: Academics</p>
+          <p>Most courses require a minimum of 75% attendance, counted separately for theory and practical sessions. Check the exact rule in your department handbook.</p>
+          <p>If you are short because of illness or an official event, submit a request with proof to your class advisor before the exam forms close.</p>
+        </div></div></div>
+      </div>
+    </article>
+
+    <article class="faq-item">
+      <button type="button" class="faq-question" id="q4" aria-expanded="false" aria-controls="a4">
+        <span class="plate"><span class="no">04</span><span class="label">How do I get a bonafide or no-dues certificate?</span></span>
+        <span class="pull" aria-hidden="true"></span>
+      </button>
+      <div class="faq-answer" id="a4" role="region" aria-labelledby="q4">
+        <div class="reveal"><div class="drawer"><div class="card">
+          <p class="filed">Filed under: Certificates</p>
+          <p>Fill in the request form at the department office and attach a photocopy of your ID card. For a no-dues certificate, your lab and library dues must be cleared first.</p>
+          <p>Bonafide certificates are normally ready within two working days.</p>
+        </div></div></div>
+      </div>
+    </article>
+
+    <article class="faq-item">
+      <button type="button" class="faq-question" id="q5" aria-expanded="false" aria-controls="a5">
+        <span class="plate"><span class="no">05</span><span class="label">How are practical lab slots allotted, and can I swap mine?</span></span>
+        <span class="pull" aria-hidden="true"></span>
+      </button>
+      <div class="faq-answer" id="a5" role="region" aria-labelledby="q5">
+        <div class="reveal"><div class="drawer"><div class="card">
+          <p class="filed">Filed under: Labs</p>
+          <p>Slots are allotted batch-wise at the start of the semester and displayed outside each lab.</p>
+          <p>To swap, find a classmate willing to exchange and submit a signed request to the lab in-charge at least a day before the session.</p>
+        </div></div></div>
+      </div>
+    </article>
+
+    <article class="faq-item">
+      <button type="button" class="faq-question" id="q6" aria-expanded="false" aria-controls="a6">
+        <span class="plate"><span class="no">06</span><span class="label">Can I apply for rechecking of my internal marks?</span></span>
+        <span class="pull" aria-hidden="true"></span>
+      </button>
+      <div class="faq-answer" id="a6" role="region" aria-labelledby="q6">
+        <div class="reveal"><div class="drawer"><div class="card">
+          <p class="filed">Filed under: Examinations</p>
+          <p>Yes. Meet the subject teacher within three working days of the marks being published and ask to see your answer script.</p>
+          <p>If the issue is not resolved, submit a written request to the Head of Department.</p>
+        </div></div></div>
+      </div>
+    </article>
+
+    <article class="faq-item">
+      <button type="button" class="faq-question" id="q7" aria-expanded="false" aria-controls="a7">
+        <span class="plate"><span class="no">07</span><span class="label">How do I join the coding club or the tech fest team?</span></span>
+        <span class="pull" aria-hidden="true"></span>
+      </button>
+      <div class="faq-answer" id="a7" role="region" aria-labelledby="q7">
+        <div class="reveal"><div class="drawer"><div class="card">
+          <p class="filed">Filed under: Student life</p>
+          <p>Sign-ups open in the first month of each semester. Fill the interest form on the notice board or portal, then attend the short orientation meeting.</p>
+          <p>Any year can join. No prior experience is needed.</p>
+        </div></div></div>
+      </div>
+    </article>
+
+    <article class="faq-item">
+      <button type="button" class="faq-question" id="q8" aria-expanded="false" aria-controls="a8">
+        <span class="plate"><span class="no">08</span><span class="label">Who do I contact for internship and placement updates?</span></span>
+        <span class="pull" aria-hidden="true"></span>
+      </button>
+      <div class="faq-answer" id="a8" role="region" aria-labelledby="q8">
+        <div class="reveal"><div class="drawer"><div class="card">
+          <p class="filed">Filed under: Placements</p>
+          <p>The training and placement cell shares all openings on the portal and by college email, so keep your profile and resume up to date.</p>
+          <p>For department-level internships, speak to your class advisor.</p>
+        </div></div></div>
+      </div>
+    </article>
+
+  </section>
+
+  <div class="empty" id="empty" hidden>No drawer matches that search. Try another word, or ask at the department office.</div>
+
+  <p class="foot">Still stuck? Visit the department office or write to helpdesk@yourcollege.edu</p>
+</main>
+
+<script>
+'use strict';
+
+/* ------------------------------------------------------------
+   Interactive FAQ
+   Click a question  ->  find its answer (nextElementSibling)
+                     ->  classList.toggle('active')  ->  CSS animates it
+   ------------------------------------------------------------ */
+
+// Step 3: select every question header
+const questions = document.querySelectorAll('.faq-question');
+const items     = document.querySelectorAll('.faq-item');
+const search    = document.getElementById('search');
+const countEl   = document.getElementById('count');
+const emptyEl   = document.getElementById('empty');
+
+// Step 4: bind a click listener to each question
+questions.forEach(function (question) {
+  question.addEventListener('click', function (event) {
+    // Step 5: the event tells us which question was clicked...
+    const clicked = event.currentTarget;
+    // ...and DOM traversal finds the answer sitting right after it
+    const answer = clicked.nextElementSibling;
+
+    // toggle the 'active' class on both elements (CSS does the rest)
+    clicked.classList.toggle('active');
+    answer.classList.toggle('active');
+
+    // keep screen readers in sync
+    clicked.setAttribute('aria-expanded', String(answer.classList.contains('active')));
+  });
+
+  // Extra: Up / Down arrow keys move between visible questions
+  question.addEventListener('keydown', function (event) {
+    if (event.key !== 'ArrowDown' && event.key !== 'ArrowUp') return;
+    event.preventDefault();
+    const visible = Array.from(questions).filter(function (q) {
+      return !q.closest('.faq-item').classList.contains('hide');
+    });
+    const i = visible.indexOf(question);
+    const next = event.key === 'ArrowDown' ? visible[i + 1] : visible[i - 1];
+    if (next) next.focus();
+  });
+});
+
+/* ---------- Open all / Close all ---------- */
+function setAll(open) {
+  questions.forEach(function (question) {
+    const answer = question.nextElementSibling;
+    question.classList.toggle('active', open);   // second argument forces on/off
+    answer.classList.toggle('active', open);
+    question.setAttribute('aria-expanded', String(open));
+  });
+}
+document.getElementById('expandAll').addEventListener('click', function () { setAll(true); });
+document.getElementById('collapseAll').addEventListener('click', function () { setAll(false); });
+
+/* ---------- Live search ---------- */
+function updateCount(shown) {
+  countEl.textContent = 'Showing ' + shown + ' of ' + items.length + ' questions';
+  emptyEl.hidden = shown !== 0;
+}
+
+search.addEventListener('input', function () {
+  const term = search.value.trim().toLowerCase();
+  let shown = 0;
+  items.forEach(function (item) {
+    const match = item.textContent.toLowerCase().indexOf(term) !== -1;
+    item.classList.toggle('hide', !match);
+    if (match) shown++;
+  });
+  updateCount(shown);
+});
+
+updateCount(items.length);
+</script>
+</body>
+</html>

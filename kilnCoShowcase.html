@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Kiln &amp; Co. — Autumn Collection</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Manrope:wght@400;600;800&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+tailwind.config = {
+  theme: { extend: {
+    colors: { bone: '#F6F1E7', ink: '#1E1E1B', glaze: '#1F5F5B', ochre: '#D4A24C', clay: '#B5573A', sage: '#8FA98A' },
+    fontFamily: { serif: ['"DM Serif Display"', 'Georgia', 'serif'], sans: ['Manrope', 'system-ui', 'sans-serif'] }
+  } }
+}
+</script>
+</head>
+<body class="bg-bone pb-24 pt-[env(safe-area-inset-top)] font-sans text-ink antialiased md:pb-0">
+
+<div class="flex min-h-screen flex-col lg:flex-row">
+
+  <!-- SIDEBAR (top bar on mobile, side panel on lg) -->
+  <aside class="flex flex-col gap-4 border-b border-ink/10 bg-white px-4 py-4 sm:px-6 lg:sticky lg:top-0 lg:h-screen lg:w-72 lg:shrink-0 lg:justify-between lg:border-b-0 lg:border-r lg:p-8">
+    <div class="flex flex-col gap-4 lg:gap-10">
+      <div class="flex items-center justify-between">
+        <p class="font-serif text-3xl leading-none">Kiln <span class="italic text-clay">&amp;</span> Co.</p>
+        <button class="flex items-center gap-2 rounded-full border border-ink/20 px-4 py-2 text-sm font-bold transition duration-200 hover:bg-ink hover:text-bone focus:outline-none focus-visible:ring-4 focus-visible:ring-ochre active:scale-95">
+          Bag <span id="cart" class="grid h-6 min-w-6 place-items-center rounded-full bg-clay px-1.5 text-xs font-extrabold text-white">0</span>
+        </button>
+      </div>
+      <nav class="flex gap-2 overflow-x-auto pb-1 text-sm font-semibold lg:flex-col lg:overflow-visible lg:pb-0">
+        <a href="#" class="flex shrink-0 items-center justify-between gap-4 rounded-full bg-ink px-4 py-2 text-bone lg:rounded-xl">All pieces <span class="text-xs opacity-70">24</span></a>
+        <a href="#" class="flex shrink-0 items-center justify-between gap-4 rounded-full px-4 py-2 transition duration-200 hover:bg-bone focus:outline-none focus-visible:ring-2 focus-visible:ring-ink lg:rounded-xl">Mugs &amp; cups <span class="text-xs opacity-50">6</span></a>
+        <a href="#" class="flex shrink-0 items-center justify-between gap-4 rounded-full px-4 py-2 transition duration-200 hover:bg-bone focus:outline-none focus-visible:ring-2 focus-visible:ring-ink lg:rounded-xl">Vases <span class="text-xs opacity-50">5</span></a>
+        <a href="#" class="flex shrink-0 items-center justify-between gap-4 rounded-full px-4 py-2 transition duration-200 hover:bg-bone focus:outline-none focus-visible:ring-2 focus-visible:ring-ink lg:rounded-xl">Bowls &amp; plates <span class="text-xs opacity-50">8</span></a>
+        <a href="#" class="flex shrink-0 items-center justify-between gap-4 rounded-full px-4 py-2 transition duration-200 hover:bg-bone focus:outline-none focus-visible:ring-2 focus-visible:ring-ink lg:rounded-xl">Planters <span class="text-xs opacity-50">5</span></a>
+      </nav>
+    </div>
+    <div class="hidden rounded-2xl bg-ink p-5 text-bone lg:block">
+      <p class="font-serif text-2xl leading-tight">Launch week</p>
+      <p class="mt-2 text-sm text-bone/70">Free shipping on every order above ₹999. Each piece is hand-thrown and glazed in small batches.</p>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="flex flex-1 flex-col gap-8 px-4 py-6 sm:px-6 lg:gap-10 lg:p-10">
+
+    <!-- heading + stats -->
+    <header class="flex flex-col gap-6 xl:flex-row xl:items-end xl:justify-between">
+      <div>
+        <p class="text-xs font-extrabold uppercase tracking-[0.25em] text-clay">New collection · Autumn</p>
+        <h1 class="mt-2 font-serif text-5xl leading-[0.95] sm:text-6xl lg:text-7xl">Made slowly,<br><span class="italic text-glaze">held daily.</span></h1>
+      </div>
+      <div class="flex flex-wrap gap-3 xl:w-1/2">
+        <div class="flex flex-1 basis-36 flex-col rounded-2xl bg-white p-4"><span class="font-serif text-3xl">24</span><span class="text-xs font-semibold text-ink/60">new pieces</span></div>
+        <div class="flex flex-1 basis-36 flex-col rounded-2xl bg-white p-4"><span class="font-serif text-3xl">₹0</span><span class="text-xs font-semibold text-ink/60">shipping above ₹999</span></div>
+        <div class="flex flex-1 basis-36 flex-col rounded-2xl bg-white p-4"><span class="font-serif text-3xl">30</span><span class="text-xs font-semibold text-ink/60">day easy returns</span></div>
+      </div>
+    </header>
+
+    <!-- featured product -->
+    <section class="flex flex-col overflow-hidden rounded-3xl bg-white shadow-sm md:flex-row">
+      <div class="aspect-square w-full md:w-1/2 md:max-w-lg">
+        <img id="hero" alt="Featured stoneware mug" class="h-full w-full object-cover">
+      </div>
+      <div class="flex flex-1 flex-col justify-center gap-5 p-6 sm:p-8 lg:p-10">
+        <span class="w-fit rounded-full bg-ochre px-3 py-1 text-xs font-extrabold uppercase tracking-wide">Featured · New</span>
+        <div>
+          <h2 class="font-serif text-4xl sm:text-5xl">The Kiln Mug</h2>
+          <p class="mt-3 text-ink/70">Hand-thrown stoneware with a reactive glaze, so no two mugs look exactly alike. Holds 300 ml and is dishwasher safe.</p>
+        </div>
+
+        <div>
+          <p class="mb-2 text-xs font-extrabold uppercase tracking-widest text-ink/50">Glaze · <span id="glazeName">Glaze Teal</span></p>
+          <div class="flex gap-3" id="swatches">
+            <button data-color="#1F5F5B" data-name="Glaze Teal" aria-label="Glaze Teal" class="h-10 w-10 rounded-full bg-glaze ring-2 ring-ink ring-offset-2 transition duration-200 hover:scale-110 focus:outline-none focus-visible:ring-4"></button>
+            <button data-color="#B5573A" data-name="Terracotta" aria-label="Terracotta" class="h-10 w-10 rounded-full bg-clay ring-offset-2 transition duration-200 hover:scale-110 focus:outline-none focus-visible:ring-4 focus-visible:ring-ink"></button>
+            <button data-color="#D4A24C" data-name="Ochre" aria-label="Ochre" class="h-10 w-10 rounded-full bg-ochre ring-offset-2 transition duration-200 hover:scale-110 focus:outline-none focus-visible:ring-4 focus-visible:ring-ink"></button>
+            <button data-color="#2B2B28" data-name="Charcoal" aria-label="Charcoal" class="h-10 w-10 rounded-full bg-ink ring-offset-2 transition duration-200 hover:scale-110 focus:outline-none focus-visible:ring-4 focus-visible:ring-clay"></button>
+          </div>
+        </div>
+
+        <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <p class="font-serif text-4xl">₹<span id="total">899</span></p>
+          <div class="flex items-center justify-between gap-2 rounded-full border border-ink/20 p-1 sm:w-40">
+            <button id="minus" class="h-10 w-10 rounded-full text-xl font-bold transition duration-200 hover:bg-bone focus:outline-none focus-visible:ring-2 focus-visible:ring-ink active:scale-90" aria-label="Decrease quantity">−</button>
+            <span id="qty" class="font-extrabold">1</span>
+            <button id="plus" class="h-10 w-10 rounded-full text-xl font-bold transition duration-200 hover:bg-bone focus:outline-none focus-visible:ring-2 focus-visible:ring-ink active:scale-90" aria-label="Increase quantity">+</button>
+          </div>
+        </div>
+
+        <div class="flex flex-col gap-3 sm:flex-row">
+          <button onclick="addHero()" class="flex-1 rounded-full bg-glaze px-6 py-3.5 font-extrabold text-white transition duration-200 hover:bg-clay focus:outline-none focus-visible:ring-4 focus-visible:ring-ochre active:scale-95">Add to bag</button>
+          <button class="flex-1 rounded-full border-2 border-ink px-6 py-3.5 font-extrabold transition duration-200 hover:bg-ink hover:text-bone focus:outline-none focus-visible:ring-4 focus-visible:ring-ochre active:scale-95">Save for later</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- product row: flex-wrap -->
+    <section>
+      <div class="flex items-end justify-between">
+        <h2 class="font-serif text-4xl">More from the <span class="italic text-clay">kiln</span></h2>
+        <a href="#" class="text-sm font-extrabold underline decoration-2 underline-offset-4 hover:text-clay focus:outline-none focus-visible:bg-ochre">View all →</a>
+      </div>
+
+      <div class="mt-6 flex flex-wrap gap-6">
+
+        <article class="group flex w-full flex-col overflow-hidden rounded-2xl bg-white transition duration-300 hover:-translate-y-1 hover:shadow-xl sm:w-[calc(50%-0.75rem)] xl:w-[calc(33.333%-1rem)]">
+          <div class="aspect-square overflow-hidden"><img data-art="vase" data-color="#B5573A" data-bg="#EDE3D2" alt="Ember vase" class="h-full w-full object-cover transition duration-500 group-hover:scale-105"></div>
+          <div class="flex flex-1 flex-col justify-between gap-4 p-5">
+            <div><h3 class="font-serif text-2xl">Ember Vase</h3><p class="mt-1 text-sm text-ink/60">Tall, narrow neck, perfect for dried stems.</p></div>
+            <div class="flex items-center justify-between"><span class="font-extrabold">₹1,499</span><button onclick="addCart(1)" class="rounded-full bg-ink px-4 py-2 text-sm font-bold text-bone transition duration-200 hover:bg-clay focus:outline-none focus-visible:ring-4 focus-visible:ring-ochre active:scale-95">Add</button></div>
+          </div>
+        </article>
+
+        <article class="group flex w-full flex-col overflow-hidden rounded-2xl bg-white transition duration-300 hover:-translate-y-1 hover:shadow-xl sm:w-[calc(50%-0.75rem)] xl:w-[calc(33.333%-1rem)]">
+          <div class="aspect-square overflow-hidden"><img data-art="bowl" data-color="#D4A24C" data-bg="#E4EBDD" alt="Dune bowl" class="h-full w-full object-cover transition duration-500 group-hover:scale-105"></div>
+          <div class="flex flex-1 flex-col justify-between gap-4 p-5">
+            <div><h3 class="font-serif text-2xl">Dune Bowl</h3><p class="mt-1 text-sm text-ink/60">A deep serving bowl with a soft, sandy glaze.</p></div>
+            <div class="flex items-center justify-between"><span class="font-extrabold">₹749</span><button onclick="addCart(1)" class="rounded-full bg-ink px-4 py-2 text-sm font-bold text-bone transition duration-200 hover:bg-clay focus:outline-none focus-visible:ring-4 focus-visible:ring-ochre active:scale-95">Add</button></div>
+          </div>
+        </article>
+
+        <article class="group flex w-full flex-col overflow-hidden rounded-2xl bg-white transition duration-300 hover:-translate-y-1 hover:shadow-xl sm:w-[calc(50%-0.75rem)] xl:w-[calc(33.333%-1rem)]">
+          <div class="aspect-square overflow-hidden"><img data-art="pot" data-color="#1F5F5B" data-bg="#F1E1CC" alt="Sprout planter" class="h-full w-full object-cover transition duration-500 group-hover:scale-105"></div>
+          <div class="flex flex-1 flex-col justify-between gap-4 p-5">
+            <div><h3 class="font-serif text-2xl">Sprout Planter</h3><p class="mt-1 text-sm text-ink/60">Drainage hole and saucer included.</p></div>
+            <div class="flex items-center justify-between"><span class="font-extrabold">₹649</span><button onclick="addCart(1)" class="rounded-full bg-ink px-4 py-2 text-sm font-bold text-bone transition duration-200 hover:bg-clay focus:outline-none focus-visible:ring-4 focus-visible:ring-ochre active:scale-95">Add</button></div>
+          </div>
+        </article>
+
+        <article class="group flex w-full flex-col overflow-hidden rounded-2xl bg-white transition duration-300 hover:-translate-y-1 hover:shadow-xl sm:w-[calc(50%-0.75rem)] xl:w-[calc(33.333%-1rem)]">
+          <div class="aspect-square overflow-hidden"><img data-art="teapot" data-color="#2B2B28" data-bg="#E9DDC7" alt="Chai teapot" class="h-full w-full object-cover transition duration-500 group-hover:scale-105"></div>
+          <div class="flex flex-1 flex-col justify-between gap-4 p-5">
+            <div><h3 class="font-serif text-2xl">Chai Teapot</h3><p class="mt-1 text-sm text-ink/60">Serves four, with a drip-free spout.</p></div>
+            <div class="flex items-center justify-between"><span class="font-extrabold">₹1,899</span><button onclick="addCart(1)" class="rounded-full bg-ink px-4 py-2 text-sm font-bold text-bone transition duration-200 hover:bg-clay focus:outline-none focus-visible:ring-4 focus-visible:ring-ochre active:scale-95">Add</button></div>
+          </div>
+        </article>
+
+        <article class="group flex w-full flex-col overflow-hidden rounded-2xl bg-white transition duration-300 hover:-translate-y-1 hover:shadow-xl sm:w-[calc(50%-0.75rem)] xl:w-[calc(33.333%-1rem)]">
+          <div class="aspect-square overflow-hidden"><img data-art="plate" data-color="#8FA98A" data-bg="#F3E6D2" alt="Supper plate" class="h-full w-full object-cover transition duration-500 group-hover:scale-105"></div>
+          <div class="flex flex-1 flex-col justify-between gap-4 p-5">
+            <div><h3 class="font-serif text-2xl">Supper Plate</h3><p class="mt-1 text-sm text-ink/60">Wide rim, sized for a full thali or pasta night.</p></div>
+            <div class="flex items-center justify-between"><span class="font-extrabold">₹549</span><button onclick="addCart(1)" class="rounded-full bg-ink px-4 py-2 text-sm font-bold text-bone transition duration-200 hover:bg-clay focus:outline-none focus-visible:ring-4 focus-visible:ring-ochre active:scale-95">Add</button></div>
+          </div>
+        </article>
+
+        <article class="group flex w-full flex-col overflow-hidden rounded-2xl bg-white transition duration-300 hover:-translate-y-1 hover:shadow-xl sm:w-[calc(50%-0.75rem)] xl:w-[calc(33.333%-1rem)]">
+          <div class="aspect-square overflow-hidden"><img data-art="mug" data-color="#8FA98A" data-bg="#EDE3D2" alt="Stack mug set" class="h-full w-full object-cover transition duration-500 group-hover:scale-105"></div>
+          <div class="flex flex-1 flex-col justify-between gap-4 p-5">
+            <div><h3 class="font-serif text-2xl">Stack Mug Set</h3><p class="mt-1 text-sm text-ink/60">Two stackable mugs in a gift-ready box.</p></div>
+            <div class="flex items-center justify-between"><span class="font-extrabold">₹1,599</span><button onclick="addCart(1)" class="rounded-full bg-ink px-4 py-2 text-sm font-bold text-bone transition duration-200 hover:bg-clay focus:outline-none focus-visible:ring-4 focus-visible:ring-ochre active:scale-95">Add</button></div>
+          </div>
+        </article>
+
+      </div>
+    </section>
+
+    <footer class="flex flex-col items-center justify-between gap-2 border-t border-ink/10 pt-6 text-sm text-ink/60 sm:flex-row">
+      <p>© Kiln &amp; Co. · Autumn Collection</p>
+      <p>Built with Tailwind CSS Flexbox + responsive breakpoints (CDN)</p>
+    </footer>
+  </main>
+</div>
+
+<!-- mobile sticky buy bar: visible only below md -->
+<div class="fixed inset-x-0 bottom-0 z-20 flex items-center justify-between gap-3 border-t border-ink/10 bg-white px-4 pt-3 pb-[calc(0.75rem+env(safe-area-inset-bottom))] md:hidden">
+  <p class="font-serif text-2xl">The Kiln Mug <span class="text-base text-ink/60">· ₹<span id="barTotal">899</span></span></p>
+  <button onclick="addHero()" class="rounded-full bg-glaze px-6 py-3 text-sm font-extrabold text-white transition duration-200 hover:bg-clay focus:outline-none focus-visible:ring-4 focus-visible:ring-ochre active:scale-95">Add to bag</button>
+</div>
+
+<!-- breakpoint indicator for the lab demo -->
+<div class="fixed bottom-20 right-3 z-30 rounded-full bg-ink px-3 py-1 text-xs font-extrabold text-bone shadow-lg md:bottom-4 md:right-4">
+  <span class="sm:hidden">base · &lt;640px</span>
+  <span class="hidden sm:inline md:hidden">sm · ≥640px</span>
+  <span class="hidden md:inline lg:hidden">md · ≥768px</span>
+  <span class="hidden lg:inline xl:hidden">lg · ≥1024px</span>
+  <span class="hidden xl:inline">xl · ≥1280px</span>
+</div>
+
+<script>
+  // Small helper that draws each product as an inline SVG so the page works offline.
+  var shapes = {
+    mug: function (c) { return '<path d="M138 84q38 4 0 44" stroke="' + c + '" stroke-width="11" fill="none" stroke-linecap="round"/><rect x="60" y="56" width="80" height="108" rx="14" fill="' + c + '"/><ellipse cx="100" cy="56" rx="40" ry="8" fill="#000" opacity=".18"/><rect x="70" y="72" width="8" height="78" rx="4" fill="#fff" opacity=".28"/>'; },
+    vase: function (c) { return '<path d="M86 40h28q-4 30 26 64q12 46-10 62H70q-22-16-10-62q30-34 26-64z" fill="' + c + '"/><ellipse cx="100" cy="40" rx="14" ry="4" fill="#000" opacity=".2"/><path d="M76 110q-4 24 4 44" stroke="#fff" stroke-width="6" fill="none" opacity=".25" stroke-linecap="round"/>'; },
+    bowl: function (c) { return '<path d="M36 96h128q0 70-64 70t-64-70z" fill="' + c + '"/><ellipse cx="100" cy="96" rx="64" ry="12" fill="#000" opacity=".2"/><ellipse cx="100" cy="97" rx="56" ry="8" fill="#fff" opacity=".18"/>'; },
+    pot: function (c) { return '<g fill="#4C7A47"><ellipse cx="80" cy="64" rx="12" ry="30" transform="rotate(-25 80 64)"/><ellipse cx="120" cy="60" rx="12" ry="32" transform="rotate(25 120 60)"/><ellipse cx="100" cy="52" rx="11" ry="34"/></g><path d="M62 112h76l-10 54H72z" fill="' + c + '"/><rect x="56" y="100" width="88" height="16" rx="5" fill="' + c + '"/><rect x="56" y="100" width="88" height="16" rx="5" fill="#000" opacity=".12"/>'; },
+    teapot: function (c) { return '<path d="M148 110q34-6 30-40" stroke="' + c + '" stroke-width="10" fill="none" stroke-linecap="round"/><path d="M54 100q-30 0-22 30q6 14 24 8" stroke="' + c + '" stroke-width="9" fill="none" stroke-linecap="round"/><ellipse cx="100" cy="116" rx="52" ry="46" fill="' + c + '"/><ellipse cx="100" cy="74" rx="30" ry="8" fill="' + c + '"/><circle cx="100" cy="64" r="7" fill="#fff" opacity=".3"/><path d="M68 112q-4 22 8 36" stroke="#fff" stroke-width="6" fill="none" opacity=".25" stroke-linecap="round"/>'; },
+    plate: function (c) { return '<ellipse cx="100" cy="112" rx="84" ry="34" fill="' + c + '"/><ellipse cx="100" cy="110" rx="62" ry="22" fill="#000" opacity=".14"/><ellipse cx="100" cy="108" rx="50" ry="16" fill="#fff" opacity=".2"/>'; }
+  };
+  function art(kind, color, bg) {
+    var svg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"><rect width="200" height="200" fill="' + bg + '"/><ellipse cx="100" cy="168" rx="62" ry="7" fill="#000" opacity=".12"/>' + shapes[kind](color) + '</svg>';
+    return 'data:image/svg+xml,' + encodeURIComponent(svg);
+  }
+  document.querySelectorAll('img[data-art]').forEach(function (img) {
+    img.src = art(img.dataset.art, img.dataset.color, img.dataset.bg);
+  });
+
+  // Featured product: glaze swatches + quantity
+  var hero = document.getElementById('hero');
+  var color = '#1F5F5B', qty = 1, price = 899, cart = 0;
+  function drawHero() { hero.src = art('mug', color, '#EDE3D2'); }
+  function refresh() {
+    document.getElementById('qty').textContent = qty;
+    var t = (price * qty).toLocaleString('en-IN');
+    document.getElementById('total').textContent = t;
+    document.getElementById('barTotal').textContent = t;
+  }
+  function addCart(n) { cart += n; document.getElementById('cart').textContent = cart; }
+  function addHero() { addCart(qty); }
+
+  document.querySelectorAll('#swatches button').forEach(function (b) {
+    b.addEventListener('click', function () {
+      color = b.dataset.color;
+      document.getElementById('glazeName').textContent = b.dataset.name;
+      document.querySelectorAll('#swatches button').forEach(function (x) { x.classList.remove('ring-2', 'ring-ink'); });
+      b.classList.add('ring-2', 'ring-ink');
+      drawHero();
+    });
+  });
+  document.getElementById('plus').onclick = function () { qty++; refresh(); };
+  document.getElementById('minus').onclick = function () { if (qty > 1) { qty--; refresh(); } };
+  drawHero(); refresh();
+</script>
+</body>
+</html>

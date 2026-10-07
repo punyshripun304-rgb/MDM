@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Admissions 2026 — Student Registration</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
+<style>
+/* ---------- Tokens ---------- */
+:root {
+  --desk: #008080;
+  --face: #c0c0c0;
+  --hi: #ffffff;
+  --mid: #808080;
+  --dark: #404040;
+  --maroon: #800000;
+  --ok: #1b7f2a;
+  --bad: #c0152b;
+  --font: Tahoma, "MS Sans Serif", Verdana, Geneva, sans-serif;
+  --pixel: "VT323", "Courier New", monospace;
+}
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  display: grid;
+  place-items: start center;
+  padding: 26px 12px calc(62px + env(safe-area-inset-bottom));
+  background-color: var(--desk);
+  font: 14px/1.35 var(--font);
+  color: #000;
+}
+
+/* ---------- Bevel helpers ---------- */
+.raised {
+  background: var(--face);
+  border: 2px solid;
+  border-color: var(--hi) var(--dark) var(--dark) var(--hi);
+  box-shadow: inset -1px -1px var(--mid), inset 1px 1px #dfdfdf;
+}
+.sunken {
+  border: 2px solid;
+  border-color: var(--mid) var(--hi) var(--hi) var(--mid);
+  box-shadow: inset 1px 1px var(--dark), inset -1px -1px #dfdfdf;
+}
+
+/* ---------- Window ---------- */
+.window { width: min(620px, 100%); padding: 3px; }
+.titlebar {
+  display: flex; align-items: center; justify-content: space-between; gap: 8px;
+  padding: 3px 4px;
+  background: var(--maroon); color: #fff; font-weight: 700;
+}
+.titlebar .name { display: flex; align-items: center; gap: 6px; min-width: 0; }
+.titlebar .name span:last-child { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.app-ico { width: 14px; height: 14px; background: #e8c547; border: 1px solid #000; flex: none; }
+.ctl { display: flex; gap: 2px; }
+.ctl i {
+  display: grid; place-items: center; width: 18px; height: 16px;
+  font: 700 11px/1 var(--font); color: #000; font-style: normal;
+}
+.menubar { display: flex; gap: 16px; padding: 3px 8px; font-size: 13px; }
+.menubar u { text-decoration: underline; }
+
+.content { padding: 8px; }
+
+.banner {
+  display: flex; align-items: baseline; justify-content: space-between; flex-wrap: wrap; gap: 4px 12px;
+  margin-bottom: 12px; padding: 8px 12px;
+  background: #000; color: #e8e0c8;
+}
+.banner h1 { margin: 0; font: 400 clamp(2rem, 8vw, 2.9rem)/1 var(--pixel); letter-spacing: 0.04em; }
+.banner h1::after { content: "_"; margin-left: 4px; animation: blink 1s steps(1) infinite; }
+.banner p { margin: 0; font: 400 1.2rem/1 var(--pixel); color: #bdb59c; }
+@keyframes blink { 50% { opacity: 0; } }
+
+/* ---------- Form ---------- */
+fieldset {
+  margin: 0 0 12px; padding: 10px 12px 12px;
+  border: 2px groove #fff; border-color: #fff var(--mid) var(--mid) #fff;
+  outline: 1px solid var(--mid); outline-offset: -3px;
+}
+legend { padding: 0 6px; font-weight: 700; }
+
+.grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px 16px; }
+.full { grid-column: 1 / -1; }
+
+label.lbl { display: block; margin-bottom: 3px; font-weight: 700; }
+.req { color: var(--bad); }
+
+input[type="text"], input[type="tel"], input[type="password"], select {
+  width: 100%; padding: 6px 7px;
+  background: #fff; color: #000; font: inherit; border-radius: 0;
+  border: 2px solid; border-color: var(--mid) var(--hi) var(--hi) var(--mid);
+  box-shadow: inset 1px 1px var(--dark), inset -1px -1px #dfdfdf;
+}
+input:focus, select:focus { outline-offset: 0; background: #fffbe0; }
+input:focus-visible, select:focus-visible { outline: 2px dotted #000; outline-offset: 2px; }
+
+/* validation states */
+input.valid, select.valid { outline: 2px solid var(--ok); }
+input.invalid, select.invalid { outline: 2px solid var(--bad); }
+input.valid:focus-visible, select.valid:focus-visible,
+input.invalid:focus-visible, select.invalid:focus-visible { outline-style: solid; outline-offset: 1px; }
+
+.error { display: block; margin-top: 3px; color: var(--bad); font-size: 12.5px; font-weight: 700; }
+.error:empty { display: none; }
+.hint { display: block; margin-top: 3px; font-size: 12px; color: #444; }
+
+.meter { display: flex; align-items: center; gap: 4px; margin-top: 6px; }
+.meter span.seg { flex: 1; height: 9px; background: #fff; border: 1px solid var(--mid); }
+.meter span.seg.on { border-color: #000; }
+.meter[data-level="1"] .on { background: var(--bad); }
+.meter[data-level="2"] .on { background: #c98a00; }
+.meter[data-level="3"] .on, .meter[data-level="4"] .on { background: var(--ok); }
+.meter em { min-width: 76px; font-style: normal; font-size: 12px; text-align: right; }
+
+.check { display: flex; align-items: center; gap: 6px; margin-top: 6px; }
+.check input { width: 16px; height: 16px; margin: 0; accent-color: #000; }
+.check.terms { align-items: flex-start; margin-top: 0; }
+.check.terms input { margin-top: 2px; flex: none; }
+.check input.invalid { outline: 2px solid var(--bad); }
+.check input.valid { outline: 2px solid var(--ok); }
+
+/* ---------- Buttons ---------- */
+.btn {
+  min-width: 96px; padding: 6px 16px;
+  background: var(--face); color: #000; font: inherit; cursor: pointer;
+  border: 2px solid; border-color: var(--hi) var(--dark) var(--dark) var(--hi);
+  box-shadow: inset -1px -1px var(--mid), inset 1px 1px #dfdfdf;
+}
+.btn:active:not(:disabled) {
+  border-color: var(--dark) var(--hi) var(--hi) var(--dark);
+  box-shadow: inset 1px 1px var(--mid);
+  padding: 7px 15px 5px 17px;
+}
+.btn:focus-visible { outline: 1px dotted #000; outline-offset: -5px; }
+.btn.default { font-weight: 700; outline: 1px solid #000; outline-offset: 0; }
+.btn.default:focus-visible { outline: 1px dotted #000; outline-offset: -5px; box-shadow: inset -1px -1px var(--mid), inset 1px 1px #dfdfdf, 0 0 0 1px #000; }
+.btn:disabled { color: var(--mid); text-shadow: 1px 1px #fff; cursor: default; }
+
+.actions { display: flex; justify-content: flex-end; gap: 8px; }
+.status { margin: 10px 0 0; padding: 3px 8px; font-size: 12.5px; }
+
+/* ---------- Message box (dialog) ---------- */
+dialog.msgbox { width: min(440px, 92vw); padding: 3px; border-width: 2px; color: #000; }
+dialog.msgbox::backdrop { background: rgba(0, 0, 0, 0.4); }
+.msg-body { display: flex; gap: 14px; padding: 18px 16px 6px; }
+.msg-text { flex: 1; min-width: 0; }
+.msg-text p { margin: 0 0 6px; }
+.msg-text ul { margin: 6px 0 0; padding-left: 18px; max-height: 170px; overflow: auto; font-size: 13px; }
+.msg-text li { margin-bottom: 3px; }
+.msg-actions { padding: 12px 0 14px; text-align: center; }
+
+.icon {
+  flex: none; display: grid; place-items: center;
+  width: 36px; height: 36px; border-radius: 50%;
+  color: #fff; font: 700 22px/1 var(--font);
+  border: 2px solid #000;
+}
+.icon.err { background: var(--bad); }
+.icon.ok { background: var(--ok); }
+.icon.info { background: var(--desk); }
+
+.progress { height: 22px; margin-top: 10px; padding: 2px; background: #fff; }
+.progress .bar {
+  height: 100%; width: 0;
+  background: repeating-linear-gradient(90deg, var(--maroon) 0 12px, transparent 12px 15px);
+}
+.progress .bar.run { width: 100%; transition: width 1.3s steps(18); }
+
+/* ---------- Desktop decoration ---------- */
+.desk-icons { position: fixed; top: 22px; left: 22px; display: none; flex-direction: column; gap: 22px; }
+.desk-icons figure { margin: 0; width: 72px; text-align: center; color: #fff; font-size: 12px; text-shadow: 1px 1px #000; }
+.glyph { position: relative; width: 34px; height: 28px; margin: 0 auto 6px; }
+.glyph.folder { background: #e8c547; border: 2px solid #000; margin-top: 8px; }
+.glyph.folder::before { content: ""; position: absolute; top: -8px; left: -2px; width: 14px; height: 6px; background: #e8c547; border: 2px solid #000; border-bottom: 0; }
+.glyph.doc { width: 26px; height: 32px; background: repeating-linear-gradient(#fff 0 5px, #9a9a9a 5px 6px); border: 2px solid #000; }
+.glyph.bin { width: 26px; height: 30px; background: repeating-linear-gradient(90deg, #b4b4b4 0 4px, #6b6b6b 4px 6px); border: 2px solid #000; border-radius: 0 0 4px 4px; }
+@media (min-width: 1000px) { .desk-icons { display: flex; } }
+
+/* ---------- Taskbar ---------- */
+.taskbar {
+  position: fixed; left: 0; right: 0; bottom: 0; z-index: 5;
+  display: flex; align-items: center; gap: 6px;
+  padding: 4px 4px calc(4px + env(safe-area-inset-bottom));
+  background: var(--face); border-top: 2px solid var(--hi); box-shadow: 0 -1px var(--mid);
+}
+.start { display: flex; align-items: center; gap: 6px; padding: 3px 10px; font-weight: 700; min-width: 0; }
+.logo { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; width: 16px; height: 16px; }
+.logo i { display: block; }
+.logo i:nth-child(1) { background: var(--maroon); }
+.logo i:nth-child(2) { background: var(--ok); }
+.logo i:nth-child(3) { background: #c98a00; }
+.logo i:nth-child(4) { background: var(--desk); }
+.task { flex: 1; min-width: 0; padding: 4px 10px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: 700; }
+.clock { padding: 4px 12px; font-size: 13px; }
+
+/* ---------- Small screens ---------- */
+@media (max-width: 560px) {
+  .grid { grid-template-columns: 1fr; }
+  .menubar { display: none; }
+  .actions .btn { flex: 1; }
+  .task { display: none; }
+  .clock { margin-left: auto; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .banner h1::after { animation: none; }
+  .progress .bar.run { transition: none; }
+}
+</style>
+</head>
+<body>
+
+<!-- decorative desktop icons -->
+<div class="desk-icons" aria-hidden="true">
+  <figure><div class="glyph folder"></div>Syllabus</figure>
+  <figure><div class="glyph doc"></div>Fee Receipt</figure>
+  <figure><div class="glyph bin"></div>Recycle Bin</figure>
+</div>
+
+<main class="window raised">
+
+  <div class="titlebar">
+    <span class="name"><span class="app-ico"></span><span>ADMIT.EXE — Student Registration</span></span>
+    <span class="ctl" aria-hidden="true"><i class="raised">_</i><i class="raised">□</i><i class="raised">×</i></span>
+  </div>
+  <div class="menubar" aria-hidden="true"><span><u>F</u>ile</span><span><u>E</u>dit</span><span><u>V</u>iew</span><span><u>H</u>elp</span></div>
+
+  <div class="content">
+
+    <div class="banner sunken">
+      <h1>ADMISSIONS 2026</h1>
+      <p>[Your College Name] · Dept. of CSE</p>
+    </div>
+
+    <!-- Step 1: HTML structure (novalidate: our JavaScript does the checking) -->
+    <form id="regForm" novalidate>
+
+      <fieldset>
+        <legend>Personal details</legend>
+        <div class="grid">
+
+          <div class="field full">
+            <label class="lbl" for="fullName">Full name <span class="req">*</span></label>
+            <input id="fullName" name="fullName" type="text" autocomplete="name" aria-describedby="err-fullName">
+            <span class="error" id="err-fullName" aria-live="polite"></span>
+          </div>
+
+          <div class="field">
+            <label class="lbl" for="email">Email address <span class="req">*</span></label>
+            <input id="email" name="email" type="text" inputmode="email" autocomplete="email" placeholder="name@example.com" aria-describedby="err-email">
+            <span class="error" id="err-email" aria-live="polite"></span>
+          </div>
+
+          <div class="field">
+            <label class="lbl" for="mobile">Mobile number <span class="req">*</span></label>
+            <input id="mobile" name="mobile" type="tel" inputmode="numeric" autocomplete="tel" placeholder="10 digits" aria-describedby="err-mobile">
+            <span class="hint">Starts with 6, 7, 8 or 9</span>
+            <span class="error" id="err-mobile" aria-live="polite"></span>
+          </div>
+
+          <div class="field full">
+            <label class="lbl" for="course">Course applied for <span class="req">*</span></label>
+            <select id="course" name="course" aria-describedby="err-course">
+              <option value="">— Select a course —</option>
+              <option>B.Tech — Computer Science &amp; Engineering</option>
+              <option>B.Tech — CSE (Data Science)</option>
+              <option>B.Tech — Electronics &amp; Communication</option>
+              <option>B.Tech — Mechanical Engineering</option>
+              <option>BCA — Computer Applications</option>
+              <option>MCA — Master of Computer Applications</option>
+            </select>
+            <span class="error" id="err-course" aria-live="polite"></span>
+          </div>
+
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>Create your login</legend>
+        <div class="grid">
+
+          <div class="field">
+            <label class="lbl" for="password">Password <span class="req">*</span></label>
+            <input id="password" name="password" type="password" autocomplete="new-password" aria-describedby="err-password">
+            <span class="hint">At least 8 characters, no spaces</span>
+            <div class="meter" id="meter" data-level="0" aria-hidden="true">
+              <span class="seg"></span><span class="seg"></span><span class="seg"></span><span class="seg"></span>
+              <em id="meterText"></em>
+            </div>
+            <span class="error" id="err-password" aria-live="polite"></span>
+          </div>
+
+          <div class="field">
+            <label class="lbl" for="confirm">Confirm password <span class="req">*</span></label>
+            <input id="confirm" name="confirm" type="password" autocomplete="new-password" aria-describedby="err-confirm">
+            <span class="error" id="err-confirm" aria-live="polite"></span>
+          </div>
+
+          <div class="full">
+            <label class="check"><input type="checkbox" id="showPw"> Show passwords</label>
+          </div>
+
+        </div>
+      </fieldset>
+
+      <div class="field" style="margin-bottom:12px">
+        <label class="check terms" for="terms">
+          <input id="terms" name="terms" type="checkbox" aria-describedby="err-terms">
+          <span>I declare that the information given above is true and complete. <span class="req">*</span></span>
+        </label>
+        <span class="error" id="err-terms" aria-live="polite"></span>
+      </div>
+
+      <div class="actions">
+        <button type="submit" class="btn default" id="submitBtn">Register</button>
+        <button type="button" class="btn" id="clearBtn">Clear</button>
+      </div>
+    </form>
+
+    <p class="status sunken" id="status">Fields marked * are mandatory.</p>
+  </div>
+</main>
+
+<!-- Message box used for errors, progress and success -->
+<dialog class="msgbox raised" id="msgBox" aria-labelledby="msgTitle">
+  <div class="titlebar"><span class="name" id="msgTitle"></span><span class="ctl" aria-hidden="true"><i class="raised">×</i></span></div>
+  <div class="msg-body">
+    <div class="icon" id="msgIcon" aria-hidden="true"></div>
+    <div class="msg-text">
+      <p id="msgText"></p>
+      <ul id="msgList" hidden></ul>
+      <div class="progress sunken" id="progress" hidden><div class="bar" id="bar"></div></div>
+    </div>
+  </div>
+  <div class="msg-actions"><button type="button" class="btn default" id="msgOk">OK</button></div>
+</dialog>
+
+<!-- taskbar -->
+<div class="taskbar" aria-hidden="true">
+  <div class="start raised"><span class="logo"><i></i><i></i><i></i><i></i></span>Start</div>
+  <div class="task sunken">ADMIT.EXE — Student Registration</div>
+  <div class="clock sunken" id="clock"></div>
+</div>
+
+<script>
+'use strict';
+
+/* ------------------------------------------------------------
+   Student Registration — client-side validation
+   Submit -> preventDefault -> trim + test each field -> show
+   errors next to fields (or a success state if all pass)
+   ------------------------------------------------------------ */
+
+// Regular expressions
+const EMAIL_RE  = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;   // local part @ domain . tld
+const MOBILE_RE = /^[6-9]\d{9}$/;                  // 10 digits, starts with 6-9
+const NAME_RE   = /^[A-Za-z][A-Za-z .'-]*$/;       // letters, spaces, . ' -
+const MIN_PASSWORD = 8;
+
+const form = document.getElementById('regForm');
+const fields = {
+  fullName: document.getElementById('fullName'),
+  email:    document.getElementById('email'),
+  mobile:   document.getElementById('mobile'),
+  course:   document.getElementById('course'),
+  password: document.getElementById('password'),
+  confirm:  document.getElementById('confirm'),
+  terms:    document.getElementById('terms')
+};
+const labels = {
+  fullName: 'Full name', email: 'Email', mobile: 'Mobile number', course: 'Course',
+  password: 'Password', confirm: 'Confirm password', terms: 'Declaration'
+};
+
+/* ---------- Step 5: one validator per field ----------
+   Each returns '' when valid, otherwise the error message. */
+const validators = {
+  fullName: function () {
+    const v = fields.fullName.value.trim();                 // trim() so "   " counts as empty
+    if (v === '')            return 'Full name is required.';
+    if (v.length < 3)        return 'Name must have at least 3 characters.';
+    if (!NAME_RE.test(v))    return 'Use letters, spaces, dots, hyphens or apostrophes only.';
+    return '';
+  },
+  email: function () {
+    const v = fields.email.value.trim();
+    if (v === '')            return 'Email address is required.';
+    if (!EMAIL_RE.test(v))   return 'Enter a valid email, for example name@college.edu.';
+    return '';
+  },
+  mobile: function () {
+    const v = fields.mobile.value.trim();
+    if (v === '')            return 'Mobile number is required.';
+    if (!/^\d+$/.test(v))    return 'Digits only, please (no spaces, dashes or +91).';
+    if (v.length !== 10)     return 'Mobile number must be exactly 10 digits (you typed ' + v.length + ').';
+    if (!MOBILE_RE.test(v))  return 'A valid mobile number starts with 6, 7, 8 or 9.';
+    return '';
+  },
+  course: function () {
+    return fields.course.value === '' ? 'Please choose the course you are applying for.' : '';
+  },
+  password: function () {
+    const v = fields.password.value;
+    if (v.trim() === '')           return 'Password is required.';
+    if (/\s/.test(v))              return 'Password must not contain spaces.';
+    if (v.length < MIN_PASSWORD)   return 'Password must be at least ' + MIN_PASSWORD + ' characters (you typed ' + v.length + ').';
+    return '';
+  },
+  confirm: function () {
+    const v = fields.confirm.value;
+    if (v === '')                  return 'Please re-enter your password.';
+    if (v !== fields.password.value) return 'The two passwords do not match.';
+    return '';
+  },
+  terms: function () {
+    return fields.terms.checked ? '' : 'You must accept the declaration to continue.';
+  }
+};
+
+/* ---------- Step 6: show feedback next to the field ---------- */
+function check(name) {
+  const message = validators[name]();
+  const input = fields[name];
+  document.getElementById('err-' + name).textContent = message;   // dynamic error text
+  input.classList.toggle('invalid', message !== '');              // red border
+  input.classList.toggle('valid', message === '');                // green border
+  input.setAttribute('aria-invalid', String(message !== ''));
+  return message;
+}
+
+function clearStates() {
+  Object.keys(fields).forEach(function (name) {
+    document.getElementById('err-' + name).textContent = '';
+    fields[name].classList.remove('valid', 'invalid');
+    fields[name].removeAttribute('aria-invalid');
+  });
+  updateMeter();
+  setStatus('Fields marked * are mandatory.');
+}
+
+/* ---------- Live feedback while typing ---------- */
+Object.keys(fields).forEach(function (name) {
+  const input = fields[name];
+  const isChoice = input.type === 'checkbox' || input.tagName === 'SELECT';
+
+  input.addEventListener(isChoice ? 'change' : 'blur', function () { check(name); });
+
+  if (!isChoice) {
+    input.addEventListener('input', function () {
+      // once a field has been checked, re-check it on every keystroke
+      if (input.classList.contains('valid') || input.classList.contains('invalid')) check(name);
+    });
+  }
+});
+
+fields.password.addEventListener('input', function () {
+  updateMeter();
+  if (fields.confirm.classList.contains('valid') || fields.confirm.classList.contains('invalid')) check('confirm');
+});
+
+document.getElementById('showPw').addEventListener('change', function (e) {
+  const type = e.target.checked ? 'text' : 'password';
+  fields.password.type = type;
+  fields.confirm.type = type;
+});
+
+/* ---------- Password strength meter (extra) ---------- */
+function updateMeter() {
+  const v = fields.password.value;
+  const meter = document.getElementById('meter');
+  let score = 0;
+  if (v.length >= MIN_PASSWORD) score++;
+  if (/[a-z]/.test(v) && /[A-Z]/.test(v)) score++;
+  if (/\d/.test(v)) score++;
+  if (/[^A-Za-z0-9]/.test(v)) score++;
+  if (v === '') score = 0;
+  if (v.length < MIN_PASSWORD && score > 1) score = 1;    // too short can never rate above "weak"
+
+  meter.dataset.level = score;
+  meter.querySelectorAll('.seg').forEach(function (seg, i) { seg.classList.toggle('on', i < score); });
+  document.getElementById('meterText').textContent =
+    ['', 'Weak', 'Fair', 'Good', 'Strong'][score];
+}
+
+/* ---------- Steps 3 & 4: submit handling ---------- */
+function handleSubmit(event) {
+  event.preventDefault();                  // stop the default submit / page reload
+
+  const problems = [];
+  Object.keys(fields).forEach(function (name) {
+    const message = check(name);
+    if (message !== '') problems.push({ name: name, message: message });
+  });
+
+  if (problems.length > 0) {
+    setStatus(problems.length + ' problem' + (problems.length > 1 ? 's' : '') + ' found. Please correct the highlighted fields.');
+    openBox({
+      mode: 'error', icon: 'err', icon_text: '×', title: 'Registration Error',
+      text: 'Your form could not be submitted. Please fix the following:',
+      list: problems.map(function (p) { return labels[p.name] + ': ' + p.message; }),
+      focus: fields[problems[0].name]
+    });
+    return;
+  }
+
+  // All fields passed -> success state.
+  // (In a real portal the data would be sent to the server here, e.g. with fetch().)
+  const firstName = fields.fullName.value.trim().split(/\s+/)[0];
+  const email = fields.email.value.trim();
+  const appNo = 'ADM26-' + (Math.floor(Math.random() * 9000) + 1000);
+
+  document.getElementById('submitBtn').disabled = true;
+  openBox({ mode: 'busy', icon: 'info', icon_text: 'i', title: 'Please wait',
+            text: 'Saving your registration…', progress: true });
+
+  setTimeout(function () {
+    openBox({
+      mode: 'success', icon: 'ok', icon_text: '✓', title: 'Registration Successful',
+      text: 'Welcome, ' + firstName + '! Your application number is ' + appNo +
+            '. A confirmation will be sent to ' + email + '.'
+    });
+    document.getElementById('submitBtn').disabled = false;
+    setStatus('Registration complete. Application number: ' + appNo);
+  }, 1500);
+}
+
+form.addEventListener('submit', handleSubmit);     // normal path (Enter key / programmatic submit)
+// Also handle the button click directly. This keeps the form working in
+// previews that block form submission, and avoids the event firing twice.
+document.getElementById('submitBtn').addEventListener('click', handleSubmit);
+
+document.getElementById('clearBtn').addEventListener('click', function () {
+  form.reset();
+  fields.password.type = 'password';
+  fields.confirm.type = 'password';
+  clearStates();
+  fields.fullName.focus();
+});
+
+/* ---------- Message box ---------- */
+const box = document.getElementById('msgBox');
+const okBtn = document.getElementById('msgOk');
+let boxMode = '';
+let focusAfter = null;
+
+function openBox(o) {
+  boxMode = o.mode;
+  focusAfter = o.focus || null;
+
+  document.getElementById('msgTitle').textContent = o.title;
+  const icon = document.getElementById('msgIcon');
+  icon.className = 'icon ' + o.icon;
+  icon.textContent = o.icon_text;
+  document.getElementById('msgText').textContent = o.text;
+
+  const list = document.getElementById('msgList');
+  list.innerHTML = '';
+  list.hidden = !o.list;
+  if (o.list) {
+    o.list.forEach(function (line) {
+      const li = document.createElement('li');
+      li.textContent = line;                         // textContent: safe for user text
+      list.appendChild(li);
+    });
+  }
+
+  const progress = document.getElementById('progress');
+  const bar = document.getElementById('bar');
+  progress.hidden = !o.progress;
+  bar.classList.remove('run');
+  if (o.progress) { void bar.offsetWidth; bar.classList.add('run'); }
+
+  okBtn.hidden = o.mode === 'busy';
+  if (!box.open) box.showModal();
+  if (o.mode !== 'busy') okBtn.focus();
+}
+
+okBtn.addEventListener('click', function () {
+  box.close();
+  if (boxMode === 'error' && focusAfter) focusAfter.focus();
+  if (boxMode === 'success') {
+    form.reset();
+    fields.password.type = 'password';
+    fields.confirm.type = 'password';
+    clearStates();
+  }
+});
+box.addEventListener('cancel', function (e) { if (boxMode === 'busy') e.preventDefault(); });
+
+/* ---------- Small helpers ---------- */
+function setStatus(text) { document.getElementById('status').textContent = text; }
+
+function tick() {
+  document.getElementById('clock').textContent =
+    new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+}
+tick();
+setInterval(tick, 15000);
+</script>
+</body>
+</html>

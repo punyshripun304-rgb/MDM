@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Saffron &amp; Salt — Food Menu</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,500&family=Nunito+Sans:wght@400;600;800&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+tailwind.config = {
+  theme: { extend: { fontFamily: {
+    display: ['"Playfair Display"', 'Georgia', 'serif'],
+    sans: ['"Nunito Sans"', 'system-ui', 'sans-serif']
+  } } }
+}
+</script>
+</head>
+<body class="bg-stone-100 font-sans text-stone-800 antialiased pt-[env(safe-area-inset-top)] pb-[env(safe-area-inset-bottom)]">
+
+<!-- top bar -->
+<header class="sticky top-0 z-10 border-b border-stone-200 bg-stone-100/90 backdrop-blur">
+  <div class="mx-auto flex max-w-6xl items-center justify-between px-4 py-3">
+    <p class="font-display text-2xl font-bold text-stone-900">Saffron <span class="italic text-red-700">&amp;</span> Salt</p>
+    <a href="#menu" class="flex items-center gap-2 rounded-full bg-stone-900 px-5 py-2 text-sm font-bold text-amber-100 transition duration-200 hover:bg-red-700 focus:outline-none focus-visible:ring-4 focus-visible:ring-amber-400 active:scale-95">
+      Your order
+      <span id="count" class="grid h-6 min-w-6 place-items-center rounded-full bg-amber-400 px-1.5 text-xs font-extrabold text-stone-900">0</span>
+    </a>
+  </div>
+</header>
+
+<!-- intro -->
+<section class="mx-auto max-w-6xl px-4 pb-6 pt-14 text-center">
+  <p class="mx-auto inline-block rounded-full bg-red-700 px-4 py-1 text-xs font-extrabold uppercase tracking-widest text-amber-50">Now open · Come hungry</p>
+  <h1 class="mt-5 font-display text-5xl font-bold leading-tight text-stone-900 sm:text-7xl">Our most <span class="italic text-red-700">loved</span> dishes</h1>
+  <p class="mx-auto mt-4 max-w-xl text-lg text-stone-600">Fresh ingredients, slow flavours and recipes our guests keep coming back for. Pick a favourite and add it to your order.</p>
+  <div class="mt-6 flex items-center justify-center gap-6 text-sm font-semibold text-stone-600">
+    <span class="flex items-center gap-2"><span class="grid h-4 w-4 place-items-center border-2 border-green-700"><span class="h-2 w-2 rounded-full bg-green-700"></span></span>Veg</span>
+    <span class="flex items-center gap-2"><span class="grid h-4 w-4 place-items-center border-2 border-red-700"><span class="h-2 w-2 rounded-full bg-red-700"></span></span>Non-veg</span>
+  </div>
+</section>
+
+<!-- menu grid -->
+<main id="menu" class="mx-auto max-w-6xl px-4 pb-20 pt-8">
+  <div class="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
+
+    <!-- 1 -->
+    <article class="group flex flex-col overflow-hidden rounded-2xl border border-stone-200 bg-white shadow-md transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
+      <div class="relative aspect-video overflow-hidden">
+        <img alt="Margherita pizza with basil" loading="lazy" class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+          src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 320 180'%3E%3Crect width='320' height='180' fill='%23F2D9A8'/%3E%3Ccircle cx='160' cy='90' r='78' fill='%23FFF8EA'/%3E%3Ccircle cx='160' cy='90' r='66' fill='%23D9953F'/%3E%3Ccircle cx='160' cy='90' r='56' fill='%23C23B22'/%3E%3Ccircle cx='140' cy='72' r='14' fill='%23FFF3CF'/%3E%3Ccircle cx='182' cy='80' r='16' fill='%23FFF3CF'/%3E%3Ccircle cx='158' cy='112' r='15' fill='%23FFF3CF'/%3E%3Ccircle cx='124' cy='104' r='9' fill='%23FFF3CF'/%3E%3Cellipse cx='150' cy='88' rx='9' ry='5' fill='%232F6B3A' transform='rotate(-30 150 88)'/%3E%3Cellipse cx='176' cy='108' rx='9' ry='5' fill='%232F6B3A' transform='rotate(25 176 108)'/%3E%3Cellipse cx='170' cy='64' rx='8' ry='4' fill='%232F6B3A'/%3E%3C/svg%3E">
+        <span class="absolute left-3 top-3 rounded-full bg-red-700 px-3 py-1 text-xs font-extrabold uppercase tracking-wide text-amber-50 shadow">Bestseller</span>
+        <span class="absolute right-3 top-3 rounded-full bg-amber-400 px-3 py-1 text-sm font-extrabold text-stone-900 shadow">₹349</span>
+      </div>
+      <div class="flex flex-1 flex-col justify-between p-5">
+        <div>
+          <h3 class="font-display text-2xl font-bold text-stone-900">Margherita Pizza</h3>
+          <p class="mt-2 text-stone-600">Hand-stretched base, slow-cooked tomato sauce, fresh mozzarella and basil from our rooftop pots.</p>
+        </div>
+        <div class="mt-5 flex items-center justify-between border-t border-stone-200 pt-4">
+          <span class="flex items-center gap-2 text-sm font-semibold text-stone-500"><span class="grid h-4 w-4 place-items-center border-2 border-green-700"><span class="h-2 w-2 rounded-full bg-green-700"></span></span>15 min</span>
+          <button onclick="addToOrder(this)" class="rounded-full bg-stone-900 px-5 py-2.5 text-sm font-bold text-amber-100 transition duration-200 hover:bg-red-700 focus:outline-none focus-visible:ring-4 focus-visible:ring-amber-400 active:scale-95">Add to order</button>
+        </div>
+      </div>
+    </article>
+
+    <!-- 2 -->
+    <article class="group flex flex-col overflow-hidden rounded-2xl border border-stone-200 bg-white shadow-md transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
+      <div class="relative aspect-video overflow-hidden">
+        <img alt="Bowl of butter chicken" loading="lazy" class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+          src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 320 180'%3E%3Crect width='320' height='180' fill='%23EBCB9E'/%3E%3Ccircle cx='160' cy='90' r='78' fill='%23FFF8EA'/%3E%3Ccircle cx='160' cy='90' r='62' fill='%238F3A1C'/%3E%3Ccircle cx='160' cy='90' r='54' fill='%23D8742A'/%3E%3Cpath d='M118 90 Q139 66 160 90 T202 90' stroke='%23FFF1D6' stroke-width='6' fill='none' stroke-linecap='round'/%3E%3Crect x='126' y='100' width='24' height='17' rx='7' fill='%23A8441C'/%3E%3Crect x='160' y='104' width='24' height='17' rx='7' fill='%23A8441C'/%3E%3Crect x='146' y='62' width='22' height='15' rx='7' fill='%23A8441C'/%3E%3Ccircle cx='176' cy='74' r='4' fill='%232F6B3A'/%3E%3Ccircle cx='130' cy='84' r='4' fill='%232F6B3A'/%3E%3Ccircle cx='190' cy='98' r='4' fill='%232F6B3A'/%3E%3C/svg%3E">
+        <span class="absolute left-3 top-3 rounded-full bg-red-700 px-3 py-1 text-xs font-extrabold uppercase tracking-wide text-amber-50 shadow">Chef's pick</span>
+        <span class="absolute right-3 top-3 rounded-full bg-amber-400 px-3 py-1 text-sm font-extrabold text-stone-900 shadow">₹429</span>
+      </div>
+      <div class="flex flex-1 flex-col justify-between p-5">
+        <div>
+          <h3 class="font-display text-2xl font-bold text-stone-900">Butter Chicken</h3>
+          <p class="mt-2 text-stone-600">Tandoor-roasted chicken in a silky tomato and cashew gravy, finished with cream and kasuri methi.</p>
+        </div>
+        <div class="mt-5 flex items-center justify-between border-t border-stone-200 pt-4">
+          <span class="flex items-center gap-2 text-sm font-semibold text-stone-500"><span class="grid h-4 w-4 place-items-center border-2 border-red-700"><span class="h-2 w-2 rounded-full bg-red-700"></span></span>20 min</span>
+          <button onclick="addToOrder(this)" class="rounded-full bg-stone-900 px-5 py-2.5 text-sm font-bold text-amber-100 transition duration-200 hover:bg-red-700 focus:outline-none focus-visible:ring-4 focus-visible:ring-amber-400 active:scale-95">Add to order</button>
+        </div>
+      </div>
+    </article>
+
+    <!-- 3 -->
+    <article class="group flex flex-col overflow-hidden rounded-2xl border border-stone-200 bg-white shadow-md transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
+      <div class="relative aspect-video overflow-hidden">
+        <img alt="Stacked veg burger" loading="lazy" class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+          src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 320 180'%3E%3Crect width='320' height='180' fill='%23F4DDB8'/%3E%3Cellipse cx='160' cy='152' rx='100' ry='8' fill='%23000' opacity='.12'/%3E%3Cpath d='M85 128H235Q235 148 215 148H105Q85 148 85 128Z' fill='%23D9953F'/%3E%3Crect x='80' y='110' width='160' height='20' rx='10' fill='%235A2E1A'/%3E%3Crect x='84' y='102' width='152' height='9' fill='%23F4B82E'/%3E%3Cpath d='M80 102q10-14 20 0t20 0t20 0t20 0t20 0t20 0t20 0t20 0V106H80Z' fill='%234C8A3B'/%3E%3Cpath d='M90 98Q90 46 160 46Q230 46 230 98Z' fill='%23D9953F'/%3E%3Cellipse cx='130' cy='68' rx='6' ry='3' fill='%23FFF3CF'/%3E%3Cellipse cx='160' cy='58' rx='6' ry='3' fill='%23FFF3CF'/%3E%3Cellipse cx='190' cy='68' rx='6' ry='3' fill='%23FFF3CF'/%3E%3Cellipse cx='175' cy='80' rx='6' ry='3' fill='%23FFF3CF'/%3E%3Cellipse cx='145' cy='82' rx='6' ry='3' fill='%23FFF3CF'/%3E%3C/svg%3E">
+        <span class="absolute right-3 top-3 rounded-full bg-amber-400 px-3 py-1 text-sm font-extrabold text-stone-900 shadow">₹249</span>
+      </div>
+      <div class="flex flex-1 flex-col justify-between p-5">
+        <div>
+          <h3 class="font-display text-2xl font-bold text-stone-900">Smash Veg Burger</h3>
+          <p class="mt-2 text-stone-600">Crisp aloo-paneer patty, melted cheddar, crunchy lettuce and our house chipotle mayo in a toasted bun.</p>
+        </div>
+        <div class="mt-5 flex items-center justify-between border-t border-stone-200 pt-4">
+          <span class="flex items-center gap-2 text-sm font-semibold text-stone-500"><span class="grid h-4 w-4 place-items-center border-2 border-green-700"><span class="h-2 w-2 rounded-full bg-green-700"></span></span>12 min</span>
+          <button onclick="addToOrder(this)" class="rounded-full bg-stone-900 px-5 py-2.5 text-sm font-bold text-amber-100 transition duration-200 hover:bg-red-700 focus:outline-none focus-visible:ring-4 focus-visible:ring-amber-400 active:scale-95">Add to order</button>
+        </div>
+      </div>
+    </article>
+
+    <!-- 4 -->
+    <article class="group flex flex-col overflow-hidden rounded-2xl border border-stone-200 bg-white shadow-md transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
+      <div class="relative aspect-video overflow-hidden">
+        <img alt="Bowl of chilli garlic noodles" loading="lazy" class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+          src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 320 180'%3E%3Crect width='320' height='180' fill='%23E9D2A6'/%3E%3Ccircle cx='160' cy='90' r='78' fill='%23B5392B'/%3E%3Ccircle cx='160' cy='90' r='68' fill='%23FFF8EA'/%3E%3Cg fill='none' stroke='%23D9A441' stroke-width='6' stroke-linecap='round'%3E%3Cpath d='M112 74q16-18 32 0t32 0t32 6'/%3E%3Cpath d='M108 92q18-18 36 0t36 0t30 4'/%3E%3Cpath d='M114 110q16-18 32 0t32 0t30 0'/%3E%3Cpath d='M130 64q14 14 28 0t28 4'/%3E%3C/g%3E%3Ccircle cx='140' cy='84' r='4' fill='%232F6B3A'/%3E%3Ccircle cx='178' cy='96' r='4' fill='%232F6B3A'/%3E%3Ccircle cx='156' cy='112' r='4' fill='%232F6B3A'/%3E%3Ccircle cx='192' cy='76' r='4' fill='%232F6B3A'/%3E%3Cellipse cx='164' cy='86' rx='9' ry='4' fill='%23C23B22'/%3E%3Cellipse cx='132' cy='104' rx='8' ry='4' fill='%23C23B22'/%3E%3C/svg%3E">
+        <span class="absolute right-3 top-3 rounded-full bg-amber-400 px-3 py-1 text-sm font-extrabold text-stone-900 shadow">₹269</span>
+      </div>
+      <div class="flex flex-1 flex-col justify-between p-5">
+        <div>
+          <h3 class="font-display text-2xl font-bold text-stone-900">Chilli Garlic Noodles</h3>
+          <p class="mt-2 text-stone-600">Wok-tossed noodles with burnt garlic, spring onion and a fiery chilli oil that lingers just right.</p>
+        </div>
+        <div class="mt-5 flex items-center justify-between border-t border-stone-200 pt-4">
+          <span class="flex items-center gap-2 text-sm font-semibold text-stone-500"><span class="grid h-4 w-4 place-items-center border-2 border-green-700"><span class="h-2 w-2 rounded-full bg-green-700"></span></span>10 min</span>
+          <button onclick="addToOrder(this)" class="rounded-full bg-stone-900 px-5 py-2.5 text-sm font-bold text-amber-100 transition duration-200 hover:bg-red-700 focus:outline-none focus-visible:ring-4 focus-visible:ring-amber-400 active:scale-95">Add to order</button>
+        </div>
+      </div>
+    </article>
+
+    <!-- 5 -->
+    <article class="group flex flex-col overflow-hidden rounded-2xl border border-stone-200 bg-white shadow-md transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
+      <div class="relative aspect-video overflow-hidden">
+        <img alt="Molten chocolate lava cake" loading="lazy" class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+          src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 320 180'%3E%3Crect width='320' height='180' fill='%23EBD3C0'/%3E%3Ccircle cx='160' cy='90' r='78' fill='%23FFF8EA'/%3E%3Cellipse cx='160' cy='126' rx='50' ry='11' fill='%233F1F10'/%3E%3Cpath d='M114 116V88Q114 62 160 62Q206 62 206 88V116Q206 126 196 126H124Q114 126 114 116Z' fill='%236B3A1E'/%3E%3Cpath d='M150 66Q160 96 170 66' fill='%233F1F10'/%3E%3Ccircle cx='160' cy='58' r='10' fill='%23C62828'/%3E%3Cpath d='M154 50l6-8 6 8Z' fill='%232F6B3A'/%3E%3Ccircle cx='132' cy='80' r='2' fill='%23FFF8EA'/%3E%3Ccircle cx='190' cy='84' r='2' fill='%23FFF8EA'/%3E%3Ccircle cx='178' cy='72' r='2' fill='%23FFF8EA'/%3E%3C/svg%3E">
+        <span class="absolute right-3 top-3 rounded-full bg-amber-400 px-3 py-1 text-sm font-extrabold text-stone-900 shadow">₹179</span>
+      </div>
+      <div class="flex flex-1 flex-col justify-between p-5">
+        <div>
+          <h3 class="font-display text-2xl font-bold text-stone-900">Molten Lava Cake</h3>
+          <p class="mt-2 text-stone-600">Warm dark-chocolate sponge with a gooey centre, served with a fresh strawberry and a dusting of sugar.</p>
+        </div>
+        <div class="mt-5 flex items-center justify-between border-t border-stone-200 pt-4">
+          <span class="flex items-center gap-2 text-sm font-semibold text-stone-500"><span class="grid h-4 w-4 place-items-center border-2 border-green-700"><span class="h-2 w-2 rounded-full bg-green-700"></span></span>12 min</span>
+          <button onclick="addToOrder(this)" class="rounded-full bg-stone-900 px-5 py-2.5 text-sm font-bold text-amber-100 transition duration-200 hover:bg-red-700 focus:outline-none focus-visible:ring-4 focus-visible:ring-amber-400 active:scale-95">Add to order</button>
+        </div>
+      </div>
+    </article>
+
+    <!-- 6 -->
+    <article class="group flex flex-col overflow-hidden rounded-2xl border border-stone-200 bg-white shadow-md transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
+      <div class="relative aspect-video overflow-hidden">
+        <img alt="Glass of mango lassi" loading="lazy" class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+          src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 320 180'%3E%3Crect width='320' height='180' fill='%23F6E0A8'/%3E%3Cpath d='M118 36H202L194 152Q193 162 184 162H136Q127 162 126 152Z' fill='%23FFF8EA'/%3E%3Cpath d='M122 62H198L192 150Q191 157 184 157H136Q129 157 128 150Z' fill='%23F4B82E'/%3E%3Cellipse cx='160' cy='62' rx='38' ry='6' fill='%23FFE08A'/%3E%3Crect x='170' y='14' width='7' height='96' rx='3' fill='%23C23B22' transform='rotate(12 172 60)'/%3E%3Cellipse cx='142' cy='54' rx='9' ry='4' fill='%232F6B3A' transform='rotate(-25 142 54)'/%3E%3Cpath d='M128 112Q160 126 192 112' stroke='%23FFF1D6' stroke-width='5' fill='none' stroke-linecap='round' opacity='.7'/%3E%3C/svg%3E">
+        <span class="absolute right-3 top-3 rounded-full bg-amber-400 px-3 py-1 text-sm font-extrabold text-stone-900 shadow">₹119</span>
+      </div>
+      <div class="flex flex-1 flex-col justify-between p-5">
+        <div>
+          <h3 class="font-display text-2xl font-bold text-stone-900">Mango Lassi</h3>
+          <p class="mt-2 text-stone-600">Thick, chilled yoghurt blended with ripe Alphonso mango and a pinch of cardamom. Cools down any spice.</p>
+        </div>
+        <div class="mt-5 flex items-center justify-between border-t border-stone-200 pt-4">
+          <span class="flex items-center gap-2 text-sm font-semibold text-stone-500"><span class="grid h-4 w-4 place-items-center border-2 border-green-700"><span class="h-2 w-2 rounded-full bg-green-700"></span></span>5 min</span>
+          <button onclick="addToOrder(this)" class="rounded-full bg-stone-900 px-5 py-2.5 text-sm font-bold text-amber-100 transition duration-200 hover:bg-red-700 focus:outline-none focus-visible:ring-4 focus-visible:ring-amber-400 active:scale-95">Add to order</button>
+        </div>
+      </div>
+    </article>
+
+  </div>
+</main>
+
+<footer class="bg-stone-900 px-4 py-8 text-center text-sm text-stone-400">
+  <p class="font-display text-2xl font-bold text-amber-100">Saffron <span class="italic text-red-500">&amp;</span> Salt</p>
+  <p class="mt-2">Open daily · 11:00 AM – 11:00 PM · Built with Tailwind CSS Grid (CDN)</p>
+</footer>
+
+<script>
+  var total = 0;
+  function addToOrder(btn) {
+    total++;
+    document.getElementById('count').textContent = total;
+    var old = btn.textContent;
+    btn.textContent = 'Added ✓';
+    setTimeout(function () { btn.textContent = old; }, 1200);
+  }
+</script>
+</body>
+</html>

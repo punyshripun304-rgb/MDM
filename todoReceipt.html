@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Daily List — Personal To-Do</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Anonymous+Pro:wght@400;700&family=DotGothic16&display=swap" rel="stylesheet">
+
+<!-- Step 1: Tailwind CSS via CDN -->
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+tailwind.config = {
+  theme: { extend: {
+    colors: { blush: '#EBB9A8', paper: '#F6F4EC', ink: '#1C1C1C', stamp: '#D2371E', hi: '#FFE45E' },
+    fontFamily: {
+      display: ['"DotGothic16"', 'ui-monospace', 'monospace'],
+      mono: ['"Anonymous Pro"', '"Courier New"', 'monospace']
+    },
+    keyframes: {
+      print: { '0%': { transform: 'translateY(-70%)', opacity: '0' }, '100%': { transform: 'translateY(0)', opacity: '1' } },
+      shake: { '0%,100%': { transform: 'translateX(0)' }, '20%,60%': { transform: 'translateX(-6px)' }, '40%,80%': { transform: 'translateX(6px)' } },
+      pop: { '0%': { transform: 'scale(.9)', opacity: '0' }, '100%': { transform: 'scale(1)', opacity: '1' } }
+    },
+    animation: { print: 'print .9s cubic-bezier(.2,.8,.2,1) both', shake: 'shake .35s linear', pop: 'pop .25s ease-out' }
+  } }
+}
+</script>
+</head>
+
+<body class="min-h-screen bg-blush px-4 pb-16 pt-[calc(2rem+env(safe-area-inset-top))] font-mono text-lg text-ink antialiased">
+
+  <!-- printer slot -->
+  <div class="mx-auto h-5 w-full max-w-md rounded-full bg-ink shadow-[0_6px_0_rgba(0,0,0,0.18)]"></div>
+
+  <!-- the receipt -->
+  <main class="relative mx-auto -mt-2 w-[calc(100%-1.5rem)] max-w-[26rem] animate-print drop-shadow-[0_12px_14px_rgba(70,25,10,0.28)]">
+    <div class="bg-paper px-5 pb-6 pt-8">
+
+      <!-- header -->
+      <header class="text-center">
+        <p class="font-display text-3xl leading-none tracking-wider">★ DAILY LIST ★</p>
+        <p class="mt-1 text-sm uppercase tracking-[0.2em]">Academic &amp; Personal Task Mart</p>
+        <p class="mt-3 text-sm" id="stamp"></p>
+        <p class="text-sm">Cashier: YOU · Terminal 01</p>
+      </header>
+
+      <hr class="my-4 border-t-2 border-dashed border-ink">
+
+      <!-- Step 1: input, category and Add button -->
+      <section aria-label="Add a task">
+        <label for="taskInput" class="font-display text-sm uppercase tracking-widest">New item</label>
+        <div id="inputWrap" class="mt-1">
+          <input id="taskInput" type="text" maxlength="80" autocomplete="off" placeholder="e.g. Finish lab record"
+            class="w-full border-0 border-b-2 border-dashed border-ink bg-transparent px-1 py-2 text-xl placeholder:text-ink/40 focus:border-solid focus:bg-hi/60 focus:outline-none">
+        </div>
+        <p id="error" class="mt-1 min-h-[1.25rem] text-sm font-bold uppercase tracking-wide text-stamp" role="alert"></p>
+
+        <div class="mt-1 flex gap-2" role="group" aria-label="Category">
+          <button type="button" data-cat="Academic" aria-pressed="true"
+            class="cat flex-1 border-2 border-ink bg-ink px-3 py-2 font-display text-sm uppercase tracking-widest text-paper transition duration-150 hover:-translate-y-0.5 focus:outline-none focus-visible:ring-4 focus-visible:ring-stamp/50 active:translate-y-0">Academic</button>
+          <button type="button" data-cat="Personal" aria-pressed="false"
+            class="cat flex-1 border-2 border-ink px-3 py-2 font-display text-sm uppercase tracking-widest transition duration-150 hover:-translate-y-0.5 focus:outline-none focus-visible:ring-4 focus-visible:ring-stamp/50 active:translate-y-0">Personal</button>
+        </div>
+
+        <button id="addBtn" type="button"
+          class="mt-3 w-full border-2 border-ink bg-hi px-4 py-3 font-display text-lg uppercase tracking-[0.25em] transition duration-150 hover:bg-ink hover:text-hi focus:outline-none focus-visible:ring-4 focus-visible:ring-stamp/50 active:scale-[0.98]">+ Add item</button>
+      </section>
+
+      <hr class="my-4 border-t-2 border-dashed border-ink">
+
+      <!-- filters -->
+      <nav class="flex items-center justify-between text-sm uppercase tracking-widest" aria-label="Filter tasks">
+        <span class="font-display">Show:</span>
+        <button type="button" data-filter="All" class="filter bg-hi px-2 py-1 font-bold focus:outline-none focus-visible:ring-4 focus-visible:ring-stamp/50">All</button>
+        <button type="button" data-filter="Academic" class="filter px-2 py-1 hover:bg-hi/70 focus:outline-none focus-visible:ring-4 focus-visible:ring-stamp/50">Academic</button>
+        <button type="button" data-filter="Personal" class="filter px-2 py-1 hover:bg-hi/70 focus:outline-none focus-visible:ring-4 focus-visible:ring-stamp/50">Personal</button>
+      </nav>
+
+      <!-- Step 1: empty list container (tasks are added here by JavaScript) -->
+      <ul id="taskList" class="mt-2 border-t border-dashed border-ink/40"></ul>
+      <p id="empty" class="hidden py-6 text-center text-sm uppercase tracking-widest text-ink/60"></p>
+
+      <hr class="my-4 border-t-2 border-dashed border-ink">
+
+      <!-- totals -->
+      <section aria-label="Totals" aria-live="polite" class="space-y-1">
+        <div class="flex justify-between"><span>ITEMS</span><span id="cTotal" class="font-bold">0</span></div>
+        <div class="flex justify-between"><span>PENDING</span><span id="cPending" class="font-bold">0</span></div>
+        <div class="flex justify-between"><span>DONE</span><span id="cDone" class="font-bold">0</span></div>
+        <div class="flex items-center justify-between border-t-2 border-ink pt-2 font-display text-xl">
+          <span>PROGRESS</span><span id="cPct">0%</span>
+        </div>
+        <p id="bar" class="text-center text-2xl tracking-[0.15em]" aria-hidden="true">░░░░░░░░░░</p>
+      </section>
+
+      <button id="clearBtn" type="button"
+        class="mt-4 w-full border-2 border-dashed border-stamp px-4 py-2 font-display text-sm uppercase tracking-widest text-stamp transition duration-150 hover:bg-stamp hover:text-paper focus:outline-none focus-visible:ring-4 focus-visible:ring-stamp/50 active:scale-[0.98]">Void all done items</button>
+
+      <hr class="my-4 border-t-2 border-dashed border-ink">
+
+      <!-- barcode + thanks -->
+      <div aria-hidden="true" class="mx-auto h-12 w-4/5 bg-[repeating-linear-gradient(90deg,#1C1C1C_0_2px,transparent_2px_4px,#1C1C1C_4px_5px,transparent_5px_8px,#1C1C1C_8px_11px,transparent_11px_13px)]"></div>
+      <p class="mt-3 text-center font-display text-sm uppercase tracking-widest">Thank you · now go do things</p>
+    </div>
+
+    <!-- torn paper edge -->
+    <svg class="block h-3 w-full" aria-hidden="true">
+      <defs><pattern id="teeth" width="16" height="12" patternUnits="userSpaceOnUse"><path d="M0 0H16L8 12Z" fill="#F6F4EC"/></pattern></defs>
+      <rect width="100%" height="100%" fill="url(#teeth)"/>
+    </svg>
+  </main>
+
+<script>
+'use strict';
+
+/* ------------------------------------------------------------
+   Personal To-Do List
+   State lives in the `tasks` array; the DOM is built from it.
+   Add -> validate -> createElement -> appendChild -> reset input
+   Done -> classList.toggle()      Delete -> element.remove()
+   ------------------------------------------------------------ */
+
+// Step 3: select the elements we need
+const input    = document.getElementById('taskInput');
+const addBtn   = document.getElementById('addBtn');
+const list     = document.getElementById('taskList');
+const errorEl  = document.getElementById('error');
+const emptyEl  = document.getElementById('empty');
+const clearBtn = document.getElementById('clearBtn');
+
+const STORAGE_KEY = 'dailyListTasks';
+let tasks = [];            // [{ id, text, cat, done, time }]
+let nextId = 1;
+let category = 'Academic'; // category chosen for the next new task
+let filter = 'All';        // which section is currently shown
+
+/* ---------- Storage (kept in try/catch so the app still works if blocked) ---------- */
+function save() {
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(tasks)); } catch (e) { /* ignore */ }
+}
+function load() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (raw !== null) return JSON.parse(raw);
+  } catch (e) { /* ignore */ }
+  return null;
+}
+
+/* ---------- Step 4 + 5: build one task element and attach its listeners ---------- */
+function createTaskElement(task) {
+  const li = document.createElement('li');
+  li.dataset.id = task.id;
+  li.dataset.cat = task.cat;
+  li.className = 'flex animate-pop items-start gap-3 border-b border-dashed border-ink/40 py-3 transition duration-300';
+
+  // completion control
+  const box = document.createElement('button');
+  box.type = 'button';
+  box.setAttribute('role', 'checkbox');
+  box.setAttribute('aria-label', 'Mark as done: ' + task.text);
+  box.className = 'mt-0.5 grid h-6 w-6 shrink-0 place-items-center border-2 border-ink font-display text-base leading-none transition duration-150 hover:bg-hi focus:outline-none focus-visible:ring-4 focus-visible:ring-stamp/50 active:scale-90';
+
+  // text + meta
+  const body = document.createElement('div');
+  body.className = 'min-w-0 flex-1';
+  const text = document.createElement('p');
+  text.className = 'break-words text-xl leading-snug transition duration-200';
+  text.textContent = task.text;                       // textContent keeps user text safe
+  const meta = document.createElement('p');
+  meta.className = 'mt-0.5 text-xs uppercase tracking-widest text-stone-500';
+  meta.textContent = task.cat + ' · ' + task.time;
+  body.appendChild(text);
+  body.appendChild(meta);
+
+  // delete control
+  const del = document.createElement('button');
+  del.type = 'button';
+  del.setAttribute('aria-label', 'Delete task: ' + task.text);
+  del.className = 'shrink-0 border border-stamp px-2 py-0.5 font-display text-xs uppercase tracking-widest text-stamp transition duration-150 hover:bg-stamp hover:text-paper focus:outline-none focus-visible:ring-4 focus-visible:ring-stamp/50 active:scale-95';
+  del.textContent = 'Void';
+
+  li.appendChild(box);
+  li.appendChild(body);
+  li.appendChild(del);
+
+  // repaint this row from its state (classList.toggle with Tailwind classes)
+  function paint() {
+    text.classList.toggle('line-through', task.done);
+    text.classList.toggle('text-stone-400', task.done);
+    box.classList.toggle('bg-ink', task.done);
+    box.classList.toggle('text-paper', task.done);
+    box.textContent = task.done ? '✓' : '';
+    box.setAttribute('aria-checked', String(task.done));
+  }
+  paint();
+
+  // Step 5: click on the completion control toggles the state
+  box.addEventListener('click', function () {
+    task.done = !task.done;
+    paint();
+    updateCounts();
+    save();
+  });
+
+  // Step 5: click on delete removes the node
+  del.addEventListener('click', function () { removeTask(task, li); });
+
+  return li;
+}
+
+/* ---------- Add ---------- */
+function addTask() {
+  const value = input.value.trim();                   // Step 3: read + trim
+
+  if (value === '') {                                 // Step 3: validate
+    showError('Item description required.');
+    return;
+  }
+  hideError();
+
+  const now = new Date();
+  const task = {
+    id: nextId++,
+    text: value,
+    cat: category,
+    done: false,
+    time: now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+  };
+  tasks.push(task);
+
+  // Step 6: append the new element, then reset the input
+  list.appendChild(createTaskElement(task));
+  input.value = '';
+  input.focus();
+
+  if (filter !== 'All' && filter !== task.cat) setFilter('All');   // make sure the new item is visible
+  refresh();
+  save();
+}
+
+/* ---------- Delete ---------- */
+function removeTask(task, li) {
+  tasks = tasks.filter(function (t) { return t.id !== task.id; });   // update state first
+  li.classList.add('opacity-0', '-translate-x-6');                    // slide out...
+  refresh();
+  save();
+  setTimeout(function () { li.remove(); }, 300);                      // ...then remove from the DOM
+}
+
+clearBtn.addEventListener('click', function () {
+  list.querySelectorAll('li').forEach(function (li) {
+    const task = tasks.find(function (t) { return String(t.id) === li.dataset.id; });
+    if (task && task.done) removeTask(task, li);
+  });
+});
+
+/* ---------- Counts, progress, empty state, filter ---------- */
+function updateCounts() {
+  const total = tasks.length;
+  const done = tasks.filter(function (t) { return t.done; }).length;
+  const pct = total === 0 ? 0 : Math.round((done / total) * 100);
+  const filled = Math.round(pct / 10);
+
+  document.getElementById('cTotal').textContent = total;
+  document.getElementById('cPending').textContent = total - done;
+  document.getElementById('cDone').textContent = done;
+  document.getElementById('cPct').textContent = pct + '%';
+  document.getElementById('bar').textContent = '█'.repeat(filled) + '░'.repeat(10 - filled);
+}
+
+function refresh() {
+  // show / hide rows according to the active filter
+  list.querySelectorAll('li').forEach(function (li) {
+    li.classList.toggle('hidden', filter !== 'All' && li.dataset.cat !== filter);
+  });
+  const visible = tasks.filter(function (t) { return filter === 'All' || t.cat === filter; }).length;
+  emptyEl.classList.toggle('hidden', visible > 0);
+  emptyEl.textContent = tasks.length === 0 ? 'No items yet. Add your first task above.' : 'Nothing in this section.';
+  updateCounts();
+}
+
+function setFilter(name) {
+  filter = name;
+  document.querySelectorAll('.filter').forEach(function (b) {
+    const on = b.dataset.filter === name;
+    b.classList.toggle('bg-hi', on);
+    b.classList.toggle('font-bold', on);
+  });
+  refresh();
+}
+
+/* ---------- Error feedback ---------- */
+function showError(message) {
+  errorEl.textContent = message;
+  const wrap = document.getElementById('inputWrap');
+  wrap.classList.remove('animate-shake');
+  void wrap.offsetWidth;                              // restart the animation
+  wrap.classList.add('animate-shake');
+  input.focus();
+}
+function hideError() { errorEl.textContent = ''; }
+
+/* ---------- Event listeners ---------- */
+addBtn.addEventListener('click', addTask);
+input.addEventListener('keydown', function (event) {
+  if (event.key === 'Enter') { event.preventDefault(); addTask(); }
+});
+input.addEventListener('input', hideError);
+
+document.querySelectorAll('.cat').forEach(function (btn) {
+  btn.addEventListener('click', function () {
+    category = btn.dataset.cat;
+    document.querySelectorAll('.cat').forEach(function (b) {
+      const on = b === btn;
+      b.setAttribute('aria-pressed', String(on));
+      b.classList.toggle('bg-ink', on);
+      b.classList.toggle('text-paper', on);
+    });
+  });
+});
+
+document.querySelectorAll('.filter').forEach(function (btn) {
+  btn.addEventListener('click', function () { setFilter(btn.dataset.filter); });
+});
+
+/* ---------- Start up ---------- */
+(function init() {
+  const now = new Date();
+  document.getElementById('stamp').textContent =
+    now.toLocaleDateString('en-IN', { weekday: 'short', day: '2-digit', month: 'short', year: 'numeric' }) +
+    ' · ' + now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) +
+    ' · No. ' + String(now.getTime()).slice(-4);
+
+  const saved = load();
+  tasks = saved !== null ? saved : [
+    { id: 1, text: 'Finish Python lab record', cat: 'Academic', done: false, time: '09:00' },
+    { id: 2, text: 'Revise DBMS notes', cat: 'Academic', done: true,  time: '09:05' },
+    { id: 3, text: 'Call home', cat: 'Personal', done: false, time: '09:10' }
+  ];
+  nextId = tasks.reduce(function (max, t) { return Math.max(max, t.id); }, 0) + 1;
+
+  tasks.forEach(function (task) { list.appendChild(createTaskElement(task)); });
+  setFilter('All');
+})();
+</script>
+</body>
+</html>
